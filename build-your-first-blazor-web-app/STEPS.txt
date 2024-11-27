@@ -1,0 +1,2 @@
+1> New blazor web app in VS 2022
+2> Adding to git
