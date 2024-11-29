@@ -1,0 +1,1 @@
+https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/2-create-user-interfaces-with-blazor-components
