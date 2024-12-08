@@ -1,4 +1,7 @@
-﻿namespace TicTacToeGame.Pages
+﻿using Microsoft.JSInterop;
+using System.Data;
+
+namespace TicTacToeGame.Pages
 {
     public partial class Board
     {
@@ -11,27 +14,6 @@
         };
 
         char player = 'x';
-
-        List<List<int[]>> winningCombinations = new()
-        {
-            // 00 01 02
-            // 10 11 12
-            // 20 21 22
-            new List<int[]>() { new int[] {0, 0}, new int[] {0, 1}, new int[] {0, 2} },
-            new List<int[]>() { new int[] {1, 0}, new int[] {1, 1}, new int[] {1, 2} },
-            new List<int[]>() { new int[] {2, 0}, new int[] {2, 1}, new int[] {2, 2} },
-
-            new List<int[]>() { new int[] {0, 0}, new int[] {1, 0}, new int[] {2, 0} },
-            new List<int[]>() { new int[] {0, 1}, new int[] {1, 1}, new int[] {2, 1} },
-            new List<int[]>() { new int[] {0, 2}, new int[] {1, 2}, new int[] {2, 2} },
-
-            new List<int[]>() { new int[] {0, 0}, new int[] {0, 1}, new int[] {0, 2} },
-            new List<int[]>() { new int[] {1, 0}, new int[] {1, 1}, new int[] {1, 2} },
-            new List<int[]>() { new int[] {2, 0}, new int[] {2, 1}, new int[] {2, 2} },
-
-            new List<int[]>() { new int[] {0, 2}, new int[] {1, 1}, new int[] {2, 2} },
-            new List<int[]>() { new int[] {0, 2}, new int[] {1, 1}, new int[] {2, 0} },
-        };
         #endregion
 
         public Board()
@@ -42,9 +24,72 @@
         private async Task MakeMove(int row, int col)
         {
             board[row, col] = player;
-            player = player == 'x' ? 'o' : 'x';
 
-            foreach(var item in winningCombinations) { }
+            if(TestWin(player))
+            {
+                var a = await JS.InvokeAsync<bool>("confirm", player + " wins");
+            }
+
+            if(NoMoreMoves())
+            {
+                await JS.InvokeAsync<bool>("confirm", "GAME ENDS");
+
+                ResetGame();
+            }
+
+            player = player == 'x' ? 'o' : 'x';
+        }
+
+        private bool TestWin(char player)
+        {
+            for (int row = 0; row < 3; row++)
+            {
+                if (CustomArray<char>.GetRow(board, row).Count(item => item == player) == 3)
+                    return true;
+            }
+
+            for (int col = 0; col < 3; col++)
+            {
+                if (CustomArray<char>.GetColumn(board, col).Count(item => item == player) == 3)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool NoMoreMoves()
+        {
+            char[] baData = board.Cast<char>().ToArray();
+            return !baData.Any(item => item == ' ');
+        }
+
+        void ResetGame()
+        {
+            char[,] boardBlank =
+            {
+                {' ', ' ', ' ' },
+                {' ', ' ', ' ' },
+                {' ', ' ', ' ' }
+            };
+
+            board = boardBlank;
+        }
+    }
+
+    public static class CustomArray<T>
+    {
+        public static T[] GetColumn(T[,] matrix, int columnNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(0))
+                    .Select(x => matrix[x, columnNumber])
+                    .ToArray();
+        }
+
+        public static T[] GetRow(T[,] matrix, int rowNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(1))
+                    .Select(x => matrix[rowNumber, x])
+                    .ToArray();
         }
     }
 }
