@@ -1,0 +1,14 @@
+﻿<div class="container">
+    @for (int row = 0; row < 3; row++)
+    {
+        int i = row;
+        @for (int col = 0; col < 3; col++)
+        {
+            int j = col;
+            <div class="cell"
+                @onclick="() => MakeMove(i, j)">
+                <h5 class="symbol">@board[i, j]</h5>
+            </div>
+        }
+    }
+</div>
