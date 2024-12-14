@@ -1,0 +1,11 @@
+﻿@rendermode InteractiveServer
+
+<button class="col" style="width=@ElemWidthInPx4Button;">@Text</button>
+
+@code {
+    [Parameter]
+    public string Text { get; set; } = "1";
+
+    [Parameter]
+    public string ElemWidthInPx4Button { get; set; } = "10";
+}

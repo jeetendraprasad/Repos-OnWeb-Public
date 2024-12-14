@@ -1,10 +1,13 @@
 using BlazorCalculatorDemo.Components;
+using BlazorCalculatorDemo.StateContainer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<Calculator2State>();
 
 var app = builder.Build();
 

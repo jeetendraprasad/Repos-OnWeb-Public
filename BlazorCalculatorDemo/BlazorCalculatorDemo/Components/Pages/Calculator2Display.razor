@@ -1,0 +1,11 @@
+﻿@rendermode InteractiveServer
+
+@using BlazorCalculatorDemo.StateContainer
+
+@inject Calculator2State calculator2State
+
+<input @bind="@calculator2State.Volatile.MathExpression" type="text" class="form-control" />
+
+@code {
+
+}
