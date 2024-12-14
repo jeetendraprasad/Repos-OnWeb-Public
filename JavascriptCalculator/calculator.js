@@ -1,7 +1,7 @@
 var input_box = document.getElementById("calculation");
 
-function UserClickButton(input) {
-    input_box.value += "" + input;
+function UserClickButton2(elem) {
+    input_box.value += "" + elem.innerText
 }
 
 function CalculateValue() {
