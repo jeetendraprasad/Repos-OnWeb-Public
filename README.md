@@ -13,3 +13,8 @@ git clone https://github.com/jeetendraprasad/Repos-OnWeb-Public.git . # . is to 
 
 Completed till end of page:-
 https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/5-exercise-access-data-from-blazor-components
+
+
+Learning/WIP:
+https://learn.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-8.0&pivots=webassembly#maintain-user-state
+https://www.c-sharpcorner.com/article/effective-state-management-in-blazor-applications/
