@@ -2,9 +2,9 @@
 
 @using BlazorCalculatorDemo.StateContainer
 
-@inject Calculator2State calculator2State
+@inject Calculator2State _calculator2State
 
-<input @bind="@calculator2State.Volatile.MathExpression" type="text" class="form-control" />
+<input @bind="@_calculator2State.Volatile.MathExpression" type="text" class="form-control" />
 
 @code {
 

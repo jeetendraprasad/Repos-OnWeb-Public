@@ -1,10 +1,15 @@
 ﻿@page "/calculator2"
+
+@using BlazorCalculatorDemo.StateContainer
+
 @rendermode InteractiveServer
+
+@inject Calculator2State _calculator2State
 
 
 <h1>Calculator2 Demo</h1>
 
-<div class="container nopadding">
+<div class="container">
 
     <div class="col-lg-12 nopadding">
         <Calculator2Display></Calculator2Display>
@@ -13,17 +18,17 @@
     <table class="table table-bordered border-dark" border="0" cellspacing="0" cellpadding="0">
         <thead hidden>
             <tr>
-                @for (int i = 0; i < NoOfCols; i++)
+                @for (int i = 0; i < _calculator2State.Fixed.ButtonsInfo.GetLength(1); i++)
                 {
-                    <th width="@(100/NoOfCols)%">Header1</th>
+                    <th width="@(100/_calculator2State.Fixed.ButtonsInfo.GetLength(1))%">Header1</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < NoOfRows; i++)
+            @for (int i = 0; i < _calculator2State.Fixed.ButtonsInfo.GetLength(0); i++)
             {
                 <tr>
-                    @for (int j = 0; j < NoOfCols; j++)
+                    @for (int j = 0; j < _calculator2State.Fixed.ButtonsInfo.GetLength(1); j++)
                     {
                         <td class="nopadding">
                             <Calculator2Button Text="@(i.ToString() + "," + j.ToString())"></Calculator2Button>
@@ -34,31 +39,4 @@
         </tbody>
     </table>
 
-    @for (int i = 0; i < NoOfCols; i++)
-    {
-        <div width=@(this.ElemWidthInPx/NoOfCols)>
-            <Calculator2Button Text="@(i.ToString())"></Calculator2Button>
-        </div>
-    }
-
-</div>
-
-
-<div class="container nopadding">
-    <table class="table table-bordered border-dark">
-        <thead hidden>
-            <tr>
-                <th width="10%">Header1</th>
-                <th width="30%">Header2</th>
-                <th width="70%">Header3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>GFG</td>
-                <td>HTML</td>
-                <td>50</td>
-            </tr>
-        </tbody>
-    </table>
 </div>
