@@ -1,11 +1,17 @@
-﻿@rendermode InteractiveServer
+﻿@using BlazorCalculatorDemo.StateContainer
 
-<button class="app-button-fullfill">@Text</button>
+@rendermode InteractiveServer
+
+@inject Calculator2State _calculator2State
+
+<button class="app-button-fullfill" @onclick="@( (e) => { OnBtnClick(e); } )">@Text</button>
 
 @code {
     [Parameter]
-    public string Text { get; set; } = "1";
+    public string Text { get; set; } = "NA";
 
-    [Parameter]
-    public string ElemWidthInPx4Button { get; set; } = "10";
+    void OnBtnClick(MouseEventArgs mouseEvent)
+    {
+        var typ = mouseEvent.Type;
+    }
 }

@@ -2,7 +2,7 @@
 {
     public class CalculatorStateVolatile
     {
-        private string? exprnString = "20";
+        private string? exprnString = "";
 
         public string MathExpression
         {
