@@ -1,17 +1,25 @@
 ﻿@using BlazorCalculatorDemo.StateContainer
+@using static BlazorCalculatorDemo.StateContainer.Calculator2StateFixed
 
 @rendermode InteractiveServer
 
 @inject Calculator2State _calculator2State
 
-<button class="app-button-fullfill" @onclick="@( (e) => { OnBtnClick(e); } )">@Text</button>
+<button class="app-button-fullfill" @onclick="@(async (args) => await ButtonEvent(args, @Property))">@Property.Text</button>
+
 
 @code {
-    [Parameter]
-    public string Text { get; set; } = "NA";
 
-    void OnBtnClick(MouseEventArgs mouseEvent)
+    [Parameter]
+    public ButtonInformation Property { get; set; } = new();
+
+    async Task ButtonEvent(MouseEventArgs args, ButtonInformation param)
     {
-        var typ = mouseEvent.Type;
+        if (param.Type == ButtonTypes.Digit)
+        {
+            _calculator2State.Volatile.MathExpression += param.Text;
+        }
+
+        await Task.Delay(1);
     }
 }

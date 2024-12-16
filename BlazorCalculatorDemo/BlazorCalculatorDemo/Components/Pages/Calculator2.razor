@@ -31,7 +31,7 @@
                     @for (int j = 0; j < _calculator2State.Fixed.ButtonsInfo.GetLength(1); j++)
                     {
                         <td class="nopadding">
-                            <Calculator2Button Text="@(_calculator2State.Fixed.ButtonsInfo[i, j].Text)"></Calculator2Button>
+                            <Calculator2Button Property="@(_calculator2State.Fixed.ButtonsInfo[i, j])"></Calculator2Button>
                         </td>
                     }
                 </tr>
