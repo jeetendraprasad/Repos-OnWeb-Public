@@ -21,7 +21,7 @@
         }
         else if(param.Type == ButtonTypes.Equal)
         {
-            _calculator2State.Volatile.MathExpression = GenericMethods.Eval(_calculator2State.Volatile.MathExpression).ToString();
+            _calculator2State.Volatile.MathExpression = GenericMethods.Eval(_calculator2State.Volatile.MathExpression);
         }
 
         await Task.Delay(1);
