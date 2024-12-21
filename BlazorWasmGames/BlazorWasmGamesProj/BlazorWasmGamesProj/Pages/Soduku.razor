@@ -6,7 +6,6 @@
 <div>
     <input type="text" name="rows_size" @bind=@rows placeholder="Rows" />
     <input type="text" name="cols_size" @bind=@cols placeholder="Columns" />
-    <button @onclick=@( async () => await UpdateGrid())>Update Grid</button>
 </div>
 
 
@@ -30,13 +29,8 @@
 
 
 @code {
-    int rows = 10;
-    int cols = 10;
-
-    async Task UpdateGrid()
-    {
-        await Task.Delay(1);
-    }
+    int rows = 4;
+    int cols = 4;
 
     string GetStyle()
     {
