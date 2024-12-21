@@ -10,16 +10,6 @@
 
 @code {
 
-    // protected override void OnInitialized()
-    // {
-    //     _calculator2State.Volatile.OnChange += StateHasChanged;
-    // }
-
-    // public void Dispose()
-    // {
-    //     _calculator2State.Volatile.OnChange -= StateHasChanged;
-    // }
-
     [Parameter]
     public ButtonInformation Property { get; set; } = new();
 
@@ -29,7 +19,12 @@
         {
             _calculator2State.Volatile.MathExpression += param.Text;
         }
+        else if(param.Type == ButtonTypes.Equal)
+        {
+            _calculator2State.Volatile.MathExpression = GenericMethods.Eval(_calculator2State.Volatile.MathExpression).ToString();
+        }
 
         await Task.Delay(1);
     }
+
 }

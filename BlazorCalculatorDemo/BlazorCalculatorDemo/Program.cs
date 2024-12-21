@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<Calculator2State>();
+builder.Services.AddScoped<Calculator2State>();
 
 var app = builder.Build();
 

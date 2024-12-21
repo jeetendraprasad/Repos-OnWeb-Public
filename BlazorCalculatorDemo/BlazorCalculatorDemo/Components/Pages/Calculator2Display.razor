@@ -4,18 +4,18 @@
 
 @inject Calculator2State _calculator2State
 
-<input @bind="@_calculator2State.Volatile.MathExpression" type="text" class="form-control" />
+<input @bind="@_calculator2State.Volatile.MathExpression" type="text" class="form-control" readonly/>
 
 @code {
 
-    // protected override void OnInitialized()
-    // {
-    //     _calculator2State.Volatile.OnChange += StateHasChanged;
-    // }
+    protected override void OnInitialized()
+    {
+        _calculator2State.Volatile.OnChange += StateHasChanged;
+    }
 
-    // public void Dispose()
-    // {
-    //     _calculator2State.Volatile.OnChange -= StateHasChanged;
-    // }
+    public void Dispose()
+    {
+        _calculator2State.Volatile.OnChange -= StateHasChanged;
+    }
 
 }
