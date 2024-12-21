@@ -5,10 +5,15 @@
 
 @inject Calculator2State _calculator2State
 
-<button class="app-button-fullfill" @onclick="@(async (args) => await ButtonEvent(args, @Property))">@Property.Text</button>
+<button class="@(GetDynamicClass(Property))" @onclick="@(async (args) => await ButtonEvent(args, @Property))">@Property.Text</button>
 
 
 @code {
+    string GetDynamicClass(ButtonInformation property)
+    {
+        string sClass = "app-button-fullfill btn btn-block" + " " + (property.Type == ButtonTypes.Digit ? "btn-primary" : " btn-success");
+        return sClass;
+    }
 
     [Parameter]
     public ButtonInformation Property { get; set; } = new();
