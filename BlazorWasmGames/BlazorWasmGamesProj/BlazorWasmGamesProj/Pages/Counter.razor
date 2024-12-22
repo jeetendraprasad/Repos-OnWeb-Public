@@ -11,16 +11,22 @@
             {
                 string blocId = GetBlockId(j, i);
 
-                <div style="@GetBlockStyle()" id="@blocId">
+                <div style="@GetBlockStyle(i*rows+j)" id="@blocId">
 
-                    @for(int k = 0; k < rows; k++)
+                    @for (int k = 0; k < rows; k++)
                     {
-                        @for(int l = 0; l < GetNoOfCols(); l++)
+                        @for (int l = 0; l < GetNoOfCols(); l++)
                         {
                             string cellId = GetCellId(blocId, k, l);
 
                             <div style="@GetCellStyle()" id="@cellId">
                                 @cellId
+                                <input type="text"/>
+                                <br/>
+                                @for (int m = 0; m < rows * GetNoOfCols(); m++)
+                                {
+                                    <button>@(m+1)</button>
+                                }
                             </div>
                         }
                     }
@@ -35,17 +41,19 @@
 
 
 @code {
-    int rows = 2;
-    int sodukuSizeInPx = 297*3*2;
+    int rows = 3;
+    int sodukuSizeInPx = 297 * 3 * 2;
 
     int GetNoOfCols() => rows;
+
+    List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
 
     string blockIdPrefix = "BLOCK_ID[{0},{1}]";
     string cellIdPrefix = "Blk[{0}] - CELL_ID[{1},{2}]";
 
-    string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;background-color: orange";
+    string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
     string GetRowStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
-    string GetBlockStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
+    string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;background-color:{BasicHtmlColors[colorIndex]};";
     string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
     string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
     string GetCellStyle() => $"width: {sodukuSizeInPx / GetNoOfCols() / GetNoOfCols()}px;height: {sodukuSizeInPx / rows / rows}px;float:left;border: solid;";
