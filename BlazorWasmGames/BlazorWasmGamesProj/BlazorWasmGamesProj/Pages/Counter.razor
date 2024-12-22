@@ -9,14 +9,18 @@
 
             @for (int j = 0; j < GetNoOfCols(); j++)
             {
-                <div style="@GetBlockStyle()" id="@GetBlockId(j, i)">
+                string blocId = GetBlockId(j, i);
+
+                <div style="@GetBlockStyle()" id="@blocId">
 
                     @for(int k = 0; k < rows; k++)
                     {
                         @for(int l = 0; l < GetNoOfCols(); l++)
                         {
-                            <div style="@GetCellStyle()">
-                                @($"[{GetBlockId(j, i)}]{k},{l}")
+                            string cellId = GetCellId(blocId, k, l);
+
+                            <div style="@GetCellStyle()" id="@cellId">
+                                @cellId
                             </div>
                         }
                     }
@@ -36,10 +40,14 @@
 
     int GetNoOfCols() => rows;
 
+    string blockIdPrefix = "BLOCK_ID[{0},{1}]";
+    string cellIdPrefix = "Blk[{0}] - CELL_ID[{1},{2}]";
+
     string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;background-color: orange";
     string GetRowStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
     string GetBlockStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
-    string GetBlockId(int x, int y) => $"BOX_ID[{x},{y}]";
+    string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
+    string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
     string GetCellStyle() => $"width: {sodukuSizeInPx / GetNoOfCols() / GetNoOfCols()}px;height: {sodukuSizeInPx / rows / rows}px;float:left;border: solid;";
 
 }
