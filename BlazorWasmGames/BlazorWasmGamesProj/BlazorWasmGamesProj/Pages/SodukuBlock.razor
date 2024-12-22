@@ -1,23 +1,21 @@
-﻿<div style="height:0;width:50%;padding-bottom:50%;background-color:burlywood">
-
+﻿
+<div style="@GetMainStyle()">
     <table>
         @for (int i = 0; i < BlockRows; i++)
         {
-            <tr>
+            <tr style="@GetRowStyle()">
                 @for (int j = 0; j < BlockCols; j++)
                 {
                     <td style="@GetStyle()">
-X
+                        X
                     </td>
                 }
             </tr>
         }
     </table>
-
 </div>
 
 @code {
-    
     [Parameter]
     public int BlockRows { get; set; }
     [Parameter]
@@ -25,5 +23,11 @@ X
 
     string GetCellHeight() => (100 / BlockRows).ToString();
     string GetCellWidth() => (100 / BlockCols).ToString();
-    string GetStyle() => "width:" + GetCellWidth() + "%;padding-bottom:" + GetCellHeight() + "%;";
+
+    string GetMainStyle() => $"background-color:blue";
+
+    string GetRowStyle() => "height:" + GetCellHeight() + "%;";
+
+    string GetStyle() => $"width:{GetCellWidth()}%;aspect-ratio:{BlockRows} / {BlockCols};";
+    //string GetStyle() => "width:" + GetCellWidth() + "%;padding-bottom:" + GetCellHeight() + "%;";
 }

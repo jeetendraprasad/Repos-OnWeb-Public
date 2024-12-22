@@ -1,18 +1,45 @@
 ﻿@page "/counter"
 
-<PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+<div style="@GetSodukuStyle()">
 
-<p role="status">Current count: @currentCount</p>
+    @for (int i = 0; i < rows; i++)
+    {
+        <div style="@GetRowStyle()">
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+            @for (int j = 0; j < GetNoOfCols(); j++)
+            {
+                <div style="@GetBlockStyle()" id="@GetBlockId(j, i)">
+
+                    @for(int k = 0; k < rows; k++)
+                    {
+                        @for(int l = 0; l < GetNoOfCols(); l++)
+                        {
+                            <div style="@GetCellStyle()">
+                                @($"[{GetBlockId(j, i)}]{k},{l}")
+                            </div>
+                        }
+                    }
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
 
 @code {
-    private int currentCount = 0;
+    int rows = 2;
+    int sodukuSizeInPx = 297*3*2;
 
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
+    int GetNoOfCols() => rows;
+
+    string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;background-color: orange";
+    string GetRowStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
+    string GetBlockStyle() => $"width: {sodukuSizeInPx / GetNoOfCols()}px;height: {sodukuSizeInPx / rows}px;float:left;";
+    string GetBlockId(int x, int y) => $"BOX_ID[{x},{y}]";
+    string GetCellStyle() => $"width: {sodukuSizeInPx / GetNoOfCols() / GetNoOfCols()}px;height: {sodukuSizeInPx / rows / rows}px;float:left;border: solid;";
+
 }

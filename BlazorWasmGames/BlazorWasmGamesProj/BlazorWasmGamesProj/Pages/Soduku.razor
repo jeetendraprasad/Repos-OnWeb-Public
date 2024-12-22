@@ -2,46 +2,47 @@
 @page "/soduku"
 
 <h3>Soduku</h3>
+<br />
 
 <div>
     <input type="text" name="rows_size" @bind=@rows placeholder="Rows" />
     <input type="text" name="cols_size" @bind=@cols placeholder="Columns" />
 </div>
 
+<br />
 
-<div style="height:0;width:50%;padding-bottom:50%;background-color:burlywood">
+<table>
 
-    <table>
-        @for (int i = 0; i < rows; i++)
-        {
-            <tr>
-                @for (int j = 0; j < cols; j++)
-                {
-                    <td style="@GetStyle()" >
+    @for (int i = 0; i < rows; i++)
+    {
+        <tr>
+            @for (int j = 0; j < cols; j++)
+            {
+                <td>
+                    <div>
+                        <SodukuBlock BlockRows="@cols" BlockCols="@rows"></SodukuBlock>
+                    </div>
+                </td>
+            }
+        </tr>
+    }
+</table>
 
-                    </td>
-                }
-            </tr>
-        }
-    </table>
 
-</div>
 
 
 @code {
     int rows = 1;
     int cols = 2;
 
-    string GetCellHeight() => (100 / rows).ToString();
-    string GetCellWidth() => (100 / cols).ToString();
-//    string GetCellSize() => (100 / Math.Max(cols, rows)).ToString();
+    string GetCellHeight() => (100.0 / rows).ToString();
+    string GetCellWidth() => (100.0 / cols).ToString();
+
+    //string GetMainStyle() => $"background-color:blue";
+
+    string GetRowStyle() => "height:" + GetCellHeight() + "%;";
 
     string GetStyle() => "width:" + GetCellWidth() + "%;padding-bottom:" + GetCellHeight() + "%;";
-
-
-    //string GetStyle2() => "width:" + GetCellSize() + "%; display:table";
-    string GetStyle2() => ""; // "display:flex;flex-direction:row";
-    string GetStyle3() => "width:50%;overflow-wrap: break-word;";
 
     string GetMainId(int row, int col) => $"SodukuMainCell[{row},{col}]";
 }
