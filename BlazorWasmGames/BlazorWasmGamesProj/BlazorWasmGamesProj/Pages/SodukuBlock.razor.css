@@ -1,0 +1,19 @@
+﻿body {
+}
+
+table {
+    display: block;
+    width: 100%;
+}
+
+tr {
+    display: block;
+    width: 100%;
+}
+
+td {
+    display: block;
+    float: left;
+    border: 1px solid blue;
+    background-color: aquamarine;
+}
