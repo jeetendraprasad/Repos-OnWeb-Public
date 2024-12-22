@@ -17,12 +17,15 @@
             <tr>
                 @for (int j = 0; j < cols; j++)
                 {
-                    <td style="@GetStyle()">
-                        <div id="@GetMainId(i, j)" style="@GetStyle2()" nopadding>
+                    <td style="@GetStyle()" nopadding>
+@*                         <div id="@GetMainId(i, j)" style="@GetStyle2()" nopadding>
                             <input type="text" value="X" style="@GetStyle3()" nopadding />
                             <br />
-                            <label style="@GetStyle3()" nopadding>123456789</label>
-                        </div>
+                            @for(int k = 0; k < Math.Max(rows,cols); k++)
+                            {
+                                <button>@k</button>
+                            }
+                        </div> *@
                     </td>
                 }
             </tr>
@@ -36,14 +39,16 @@
     int rows = 4;
     int cols = 4;
 
-    string GetCellSize() => (100 / Math.Max(cols, rows)).ToString();
+    string GetCellHeight() => (100 / rows).ToString();
+    string GetCellWidth() => (100 / cols).ToString();
+//    string GetCellSize() => (100 / Math.Max(cols, rows)).ToString();
 
-    string GetStyle() => "width:" + GetCellSize() + "%;padding-bottom:" + GetCellSize() + "%;";
+    string GetStyle() => "width:" + GetCellWidth() + "%;padding-bottom:" + GetCellHeight() + "%;";
 
 
     //string GetStyle2() => "width:" + GetCellSize() + "%; display:table";
     string GetStyle2() => ""; // "display:flex;flex-direction:row";
-    string GetStyle3() => "width:" + GetCellSize() + "%;overflow-wrap: break-word;";
+    string GetStyle3() => "width:50%;overflow-wrap: break-word;";
 
     string GetMainId(int row, int col) => $"SodukuMainCell[{row},{col}]";
 }
