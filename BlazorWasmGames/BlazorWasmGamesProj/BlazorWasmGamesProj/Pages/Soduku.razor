@@ -18,10 +18,10 @@
                 @for (int j = 0; j < cols; j++)
                 {
                     <td style="@GetStyle()">
-                        <div id="@GetMainId(i, j)" style="@GetStyle2()">
-                            <label for="MyInput">label&nbsp;text</label>
+                        <div id="@GetMainId(i, j)" style="@GetStyle2()" nopadding>
+                            <input type="text" value="X" style="@GetStyle3()" nopadding />
                             <br />
-                            <input type="text" id="MyInput" style="flex:1" />
+                            <label style="@GetStyle3()" nopadding>123456789</label>
                         </div>
                     </td>
                 }
@@ -42,7 +42,8 @@
 
 
     //string GetStyle2() => "width:" + GetCellSize() + "%; display:table";
-    string GetStyle2() => "display:flex;flex-direction:row";
+    string GetStyle2() => ""; // "display:flex;flex-direction:row";
+    string GetStyle3() => "width:" + GetCellSize() + "%;overflow-wrap: break-word;";
 
     string GetMainId(int row, int col) => $"SodukuMainCell[{row},{col}]";
 }
