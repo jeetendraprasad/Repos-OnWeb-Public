@@ -17,15 +17,8 @@
             <tr>
                 @for (int j = 0; j < cols; j++)
                 {
-                    <td style="@GetStyle()" nopadding>
-@*                         <div id="@GetMainId(i, j)" style="@GetStyle2()" nopadding>
-                            <input type="text" value="X" style="@GetStyle3()" nopadding />
-                            <br />
-                            @for(int k = 0; k < Math.Max(rows,cols); k++)
-                            {
-                                <button>@k</button>
-                            }
-                        </div> *@
+                    <td style="@GetStyle()" >
+
                     </td>
                 }
             </tr>
@@ -36,8 +29,8 @@
 
 
 @code {
-    int rows = 4;
-    int cols = 4;
+    int rows = 1;
+    int cols = 2;
 
     string GetCellHeight() => (100 / rows).ToString();
     string GetCellWidth() => (100 / cols).ToString();
