@@ -18,9 +18,14 @@
                 @for (int j = 0; j < cols; j++)
                 {
                     <td style="@GetStyle()" nopadding>
-
-                        @* <SodukuBlock BlockRows="@cols" BlockCols="@rows"></SodukuBlock> *@
-
+@*                         <div id="@GetMainId(i, j)" style="@GetStyle2()" nopadding>
+                            <input type="text" value="X" style="@GetStyle3()" nopadding />
+                            <br />
+                            @for(int k = 0; k < Math.Max(rows,cols); k++)
+                            {
+                                <button>@k</button>
+                            }
+                        </div> *@
                     </td>
                 }
             </tr>
@@ -31,15 +36,14 @@
 
 
 @code {
-    int rows = 1;
-    int cols = 1;
+    int rows = 4;
+    int cols = 4;
 
     string GetCellHeight() => (100 / rows).ToString();
     string GetCellWidth() => (100 / cols).ToString();
-    //    string GetCellSize() => (100 / Math.Max(cols, rows)).ToString();
+//    string GetCellSize() => (100 / Math.Max(cols, rows)).ToString();
 
-    string GetStyle() => $"width:{GetCellWidth()}%;aspect-ratio:{rows}/{cols};";
-    //"width:" + GetCellWidth() + "%;aspect-ratio::" + GetCellHeight() + "%;";
+    string GetStyle() => "width:" + GetCellWidth() + "%;padding-bottom:" + GetCellHeight() + "%;";
 
 
     //string GetStyle2() => "width:" + GetCellSize() + "%; display:table";
