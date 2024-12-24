@@ -5,8 +5,8 @@
 <br />
 
 <div>
-    <input type="text" name="rows_size" @bind=@rows placeholder="Rows" />
-    <input type="text" name="cols_size" @bind=@cols placeholder="Columns" />
+    <input type="text" name="rows_size" @bind=@rowsBlock placeholder="Rows" />
+    <input type="text" name="cols_size" @bind=@colsBlock placeholder="Columns" />
 </div>
 
 <br />
@@ -20,19 +20,19 @@
 
 <div style="@GetSodukuStyle()">
 
-    @for (int i = 0; i < cols; i++)
+    @for (int i = 0; i < colsBlock; i++)
     {
-        <div style="@GetRowStyle()">
+        <div style="@GetBlockRowStyle()">
 
-            @for (int j = 0; j < rows; j++)
+            @for (int j = 0; j < rowsBlock; j++)
             {
                 string blocId = GetBlockId(j, i);
 
-                <div style="@GetBlockStyle(i*rows+j)" id="@blocId">
+                <div style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
 
-                    @for (int k = 0; k < cols; k++)
+                    @for (int k = 0; k < colsBlock; k++)
                     {
-                        @for (int l = 0; l < rows; l++)
+                        @for (int l = 0; l < rowsBlock; l++)
                         {
                             string cellId = GetCellId(blocId, k, l);
 
@@ -40,7 +40,7 @@
                                 @cellId
                                 <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
                                 <br />
-                                @for (int m = 0; m < rows * cols; m++)
+                                @for (int m = 0; m < rowsBlock * colsBlock; m++)
                                 {
                                     <button style="font-size: 0.5em;" id="@(cellId+":H"+(m+1).ToString())">@(m + 1)</button>
                                 }
@@ -59,24 +59,54 @@
 
 @code {
 
-    int rows = 2;
-    int cols = 2;
+    int rowsBlock = 2;
+    int colsBlock = 2;
+
     bool editMode = true;
 
     int sodukuSizeInPx = 900;
 
     List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
 
-    string blockIdPrefix = "B[{0},{1}]";
-    string cellIdPrefix = "{0}:C[{1},{2}]";
-    string cellHintPrefix = "{0}:C[{1},{2}]:H{0}";
+    string blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
+    string cellIdPrefix = "{0}:C[{1},{2}]";             // cell names are BLOCK_ID:[{0-based rows},{0-based cols}]
 
 
     string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
-    string GetRowStyle() => $"width: {sodukuSizeInPx / cols}px;height: {sodukuSizeInPx / rows}px;float:left;";
-    string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / cols}px;height: {sodukuSizeInPx / rows}px;float:left;background-color:{BasicHtmlColors[colorIndex % BasicHtmlColors.Count]};";
+    string GetBlockRowStyle() => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;";
+    string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;background-color:{BasicHtmlColors[colorIndex % BasicHtmlColors.Count]};";
     string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
     string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
-    string GetCellStyle() => $"width: {sodukuSizeInPx / rows / cols}px;height: {sodukuSizeInPx / rows / cols}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
+    string GetCellStyle() => $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
 
+    // Get Solving Unit - Horigontal list
+    List<string> GetSuHori(int rowNoSoduku)
+    {
+        List<string> retVal = new List<string>();
+
+        return retVal;
+    }
+
+    // Get Solving Unit - Vertical list
+    List<string> GetSuVert(int colNoSoduku)
+    {
+        List<string> retVal = new List<string>();
+
+        return retVal;
+    }
+
+    // Get Solving Unit - for a block
+    List<string> GetSuVert(int colNoBlock, int rowNoBlock)
+    {
+        List<string> retVal = new List<string>();
+
+//        string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
+
+        for(int i = 0; i < rowNoBlock; i++)
+            for (int j = 0; j < rowNoBlock; j++)
+                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock, colNoBlock), j, i));
+
+
+        return retVal;
+    }
 }
