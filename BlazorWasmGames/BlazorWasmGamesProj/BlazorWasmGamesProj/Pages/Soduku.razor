@@ -38,11 +38,11 @@
 
                             <div style="@GetCellStyle()" id="@cellId">
                                 @cellId
-                                <input type="text" style="overflow : hidden; width : 100%;" />
+                                <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
                                 <br />
                                 @for (int m = 0; m < rows * cols; m++)
                                 {
-                                    <button style="font-size: 0.5em;">@(m + 1)</button>
+                                    <button style="font-size: 0.5em;" id="@(cellId+":H"+(m+1).ToString())">@(m + 1)</button>
                                 }
                             </div>
                         }
@@ -59,18 +59,18 @@
 
 @code {
 
-    int rows = 1;
+    int rows = 2;
     int cols = 2;
     bool editMode = true;
 
     int sodukuSizeInPx = 900;
 
-    //int GetNoOfCols() => cols;
-
     List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
 
     string blockIdPrefix = "B[{0},{1}]";
-    string cellIdPrefix = "[{0}]:C[{1},{2}]";
+    string cellIdPrefix = "{0}:C[{1},{2}]";
+    string cellHintPrefix = "{0}:C[{1},{2}]:H{0}";
+
 
     string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
     string GetRowStyle() => $"width: {sodukuSizeInPx / cols}px;height: {sodukuSizeInPx / rows}px;float:left;";
