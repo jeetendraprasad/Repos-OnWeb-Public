@@ -154,6 +154,7 @@
         InitTimer();
         List<string> a = GetSuVert(4);
         await Task.Delay(1);
+        DeInitTimer();
     }
 
     protected override Task OnInitializedAsync()
@@ -178,6 +179,7 @@
     {
         if (timer.Enabled)
         {
+            timer.Stop();
             timer.Elapsed -= OnTimerElapsed;
             timer.Enabled = false;
             timer.Dispose();
