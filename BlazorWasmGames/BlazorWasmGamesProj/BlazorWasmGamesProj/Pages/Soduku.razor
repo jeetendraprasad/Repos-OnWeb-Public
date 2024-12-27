@@ -56,6 +56,10 @@
 
 </div>
 
+<br>
+<button @onclick="( async () => await Debug())">Debug</button>
+<br />
+
 
 @code {
 
@@ -100,13 +104,19 @@
     {
         List<string> retVal = new List<string>();
 
-//        string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
+        //        string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
 
-        for(int i = 0; i < rowNoBlock; i++)
-            for (int j = 0; j < rowNoBlock; j++)
+        for (int i = 0; i < rowsBlock; i++)
+            for (int j = 0; j < colsBlock; j++)
                 retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock, colNoBlock), j, i));
 
 
         return retVal;
+    }
+
+    async Task Debug()
+    {
+        List<string> a = GetSuVert(1, 1);
+        await Task.Delay(1);
     }
 }
