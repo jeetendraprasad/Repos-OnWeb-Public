@@ -1,6 +1,10 @@
 ﻿@page "/"
 @page "/soduku"
+
 @using System.Diagnostics
+@using System.Timers;
+
+@implements IDisposable
 
 <h3>Soduku</h3>
 <br />
@@ -71,6 +75,8 @@
 
     int sodukuSizeInPx = 900;
 
+    Timer timer = new Timer();
+
     List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
 
     string blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
@@ -103,7 +109,7 @@
 
             retVal.Add(string.Format(cellIdPrefix, blockId, (int)(rowNoSoduku / rowsBlock), (int)(j % rowsBlock)));
         }
-        
+
         return retVal;
     }
 
@@ -137,7 +143,7 @@
 
         for (int i = 0; i < rowsBlock; i++)
             for (int j = 0; j < colsBlock; j++)
-                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock-1, colNoBlock-1), j, i));
+                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock - 1, colNoBlock - 1), j, i));
 
 
         return retVal;
@@ -145,7 +151,54 @@
 
     async Task Debug1()
     {
+        InitTimer();
         List<string> a = GetSuVert(4);
         await Task.Delay(1);
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+
+
+        return base.OnInitializedAsync();
+    }
+
+    void InitTimer()
+    {
+        if (!timer.Enabled)
+        {
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Elapsed += OnTimerElapsed;
+            timer.Enabled = true;
+        }
+    }
+
+    void DeInitTimer()
+    {
+        if (timer.Enabled)
+        {
+            timer.Elapsed -= OnTimerElapsed;
+            timer.Enabled = false;
+            timer.Dispose();
+        }
+
+    }
+
+    private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        Console.WriteLine(DateTime.Now);
+
+        InvokeAsync(
+            () =>
+            {
+                StateHasChanged();
+            }
+        );
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
     }
 }
