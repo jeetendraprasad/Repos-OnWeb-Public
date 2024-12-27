@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/soduku"
+@using System.Diagnostics
 
 <h3>Soduku</h3>
 <br />
@@ -57,7 +58,7 @@
 </div>
 
 <br>
-<button @onclick="( async () => await Debug())">Debug</button>
+<button @onclick="( async () => await Debug1())">Debug</button>
 <br />
 
 
@@ -88,6 +89,21 @@
     {
         List<string> retVal = new List<string>();
 
+        int rowA = (int)(rowNoSoduku / rowsBlock);
+
+        Debug.Print("rowA = " + rowA.ToString());
+
+        for (int j = 0; j < rowsBlock * colsBlock; j++)
+        {
+            int colA = (int)(j / rowsBlock);
+
+            Debug.Print("colA = " + colA.ToString());
+
+            string blockId = GetBlockId(rowA, colA);
+
+            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(rowNoSoduku / rowsBlock), (int)(j % rowsBlock)));
+        }
+        
         return retVal;
     }
 
@@ -96,27 +112,40 @@
     {
         List<string> retVal = new List<string>();
 
+        int colA = (int)(colNoSoduku / rowsBlock);
+
+        Debug.Print("colA = " + colA.ToString());
+
+        for (int j = 0; j < rowsBlock * colsBlock; j++)
+        {
+            int rowA = (int)(j / colsBlock);
+
+            Debug.Print("rowA = " + rowA.ToString());
+
+            string blockId = GetBlockId(rowA, colA);
+
+            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(j % colsBlock), (int)(colNoSoduku / rowsBlock) - 1));
+        }
+
         return retVal;
     }
 
     // Get Solving Unit - for a block
-    List<string> GetSuVert(int colNoBlock, int rowNoBlock)
+    List<string> GetSuBlock(int colNoBlock, int rowNoBlock)
     {
         List<string> retVal = new List<string>();
 
-        //        string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
-
         for (int i = 0; i < rowsBlock; i++)
             for (int j = 0; j < colsBlock; j++)
-                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock, colNoBlock), j, i));
+                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock-1, colNoBlock-1), j, i));
 
 
         return retVal;
     }
 
-    async Task Debug()
+    async Task Debug1()
     {
-        List<string> a = GetSuVert(1, 1);
+        List<string> a = GetSuVert(4);
         await Task.Delay(1);
     }
 }
