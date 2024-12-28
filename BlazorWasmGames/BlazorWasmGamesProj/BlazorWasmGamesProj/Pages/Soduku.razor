@@ -33,7 +33,7 @@
             {
                 string blocId = GetBlockId(j, i);
 
-                <div style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
+                <div class="@(blocId==highlightBlock ? "highlight" : "")" style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
 
                     @for (int k = 0; k < colsBlock; k++)
                     {
@@ -41,7 +41,7 @@
                         {
                             string cellId = GetCellId(blocId, k, l);
 
-                            <div style="@GetCellStyle()" id="@cellId">
+                            <div class="@(cellId==highlightBlock ? "highlight" : "")" style="@GetCellStyle()" id="@cellId">
                                 @cellId
                                 <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
                                 <br />
@@ -76,6 +76,11 @@
     int sodukuSizeInPx = 900;
 
     Timer timer = new Timer();
+
+    bool debuggingOn = false;
+    int index = 0;
+    string highlightBlock = "";
+    string highlightCell = "";
 
     List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
 
@@ -151,16 +156,15 @@
 
     async Task Debug1()
     {
+        index = 0;
+        debuggingOn = true;
         InitTimer();
-        List<string> a = GetSuVert(4);
         await Task.Delay(1);
-        DeInitTimer();
+        //DeInitTimer();
     }
 
     protected override Task OnInitializedAsync()
     {
-
-
         return base.OnInitializedAsync();
     }
 
@@ -190,6 +194,30 @@
     private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         Console.WriteLine(DateTime.Now);
+
+        //timer.Stop();
+
+        if (debuggingOn)
+        {
+            List<string> suHori = GetSuHori(1);
+
+            if (index > rowsBlock * colsBlock)
+            {
+                debuggingOn = false;
+                DeInitTimer();
+                index = 0;
+            }
+            else if (index <= rowsBlock * colsBlock && index >= 0)
+            {
+                highlightBlock = suHori[index++];
+            }
+            else
+            {
+                // wrong: 
+                Debug.Assert(false);
+            }
+
+        }
 
         InvokeAsync(
             () =>
