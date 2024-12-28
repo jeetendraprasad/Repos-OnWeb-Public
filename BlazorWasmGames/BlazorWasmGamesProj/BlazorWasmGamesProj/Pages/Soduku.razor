@@ -3,6 +3,7 @@
 
 @using System.Diagnostics
 @using System.Timers;
+@using BlazorWasmGamesProj.Code
 
 @implements IDisposable
 
@@ -33,7 +34,7 @@
             {
                 string blocId = GetBlockId(j, i);
 
-                <div class="@(blocId==highlightBlock ? "highlight" : "")" style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
+                <div style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
 
                     @for (int k = 0; k < colsBlock; k++)
                     {
@@ -41,7 +42,7 @@
                         {
                             string cellId = GetCellId(blocId, k, l);
 
-                            <div class="@(cellId==highlightBlock ? "highlight" : "")" style="@GetCellStyle()" id="@cellId">
+                            <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle()" id="@cellId">
                                 @cellId
                                 <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
                                 <br />
@@ -79,7 +80,7 @@
 
     bool debuggingOn = false;
     int index = 0;
-    string highlightBlock = "";
+    //string highlightBlock = "";
     string highlightCell = "";
 
     List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
@@ -95,6 +96,29 @@
     string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
     string GetCellStyle() => $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
 
+    List<string> SuHoriFullFlattened {
+        get {
+            List<string> list = SuHoriFull.Flatten();
+            Console.WriteLine(string.Join("    ", list));
+            return list;
+        }
+    }
+    List<List<string>> SuHoriFull {
+        get
+        {
+            List<List<string>> retVal = new();
+
+            for (int i = 0; i < rowsBlock * colsBlock; i++)
+            {
+                List<string> list = GetSuHori(i);
+                retVal.Add(list);
+
+            }
+
+            return retVal;
+        }
+    }
+
     // Get Solving Unit - Horigontal list
     List<string> GetSuHori(int rowNoSoduku)
     {
@@ -102,13 +126,13 @@
 
         int rowA = (int)(rowNoSoduku / rowsBlock);
 
-        Debug.Print("rowA = " + rowA.ToString());
+        //Debug.Print("rowA = " + rowA.ToString());
 
         for (int j = 0; j < rowsBlock * colsBlock; j++)
         {
             int colA = (int)(j / rowsBlock);
 
-            Debug.Print("colA = " + colA.ToString());
+            //Debug.Print("colA = " + colA.ToString());
 
             string blockId = GetBlockId(rowA, colA);
 
@@ -125,13 +149,13 @@
 
         int colA = (int)(colNoSoduku / rowsBlock);
 
-        Debug.Print("colA = " + colA.ToString());
+        //Debug.Print("colA = " + colA.ToString());
 
         for (int j = 0; j < rowsBlock * colsBlock; j++)
         {
             int rowA = (int)(j / colsBlock);
 
-            Debug.Print("rowA = " + rowA.ToString());
+            //Debug.Print("rowA = " + rowA.ToString());
 
             string blockId = GetBlockId(rowA, colA);
 
@@ -193,23 +217,23 @@
 
     private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        Console.WriteLine(DateTime.Now);
+        //Console.WriteLine(DateTime.Now);
 
         //timer.Stop();
 
         if (debuggingOn)
         {
-            List<string> suHori = GetSuHori(1);
+            List<string> cell = SuHoriFullFlattened;
 
-            if (index > rowsBlock * colsBlock)
+            if (index > cell.Count)
             {
                 debuggingOn = false;
                 DeInitTimer();
                 index = 0;
             }
-            else if (index <= rowsBlock * colsBlock && index >= 0)
+            else if (index <= cell.Count && index >= 0)
             {
-                highlightBlock = suHori[index++];
+                highlightCell = cell[index++];
             }
             else
             {
