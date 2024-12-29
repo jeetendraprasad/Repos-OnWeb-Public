@@ -191,14 +191,43 @@
         return retVal;
     }
 
+    List<string> SuBlockFullFlattened
+    {
+        get
+        {
+            List<string> list = SuBlockFull.Flatten();
+            Console.WriteLine(string.Join("    ", list));
+            return list;
+        }
+    }
+
+    List<List<string>> SuBlockFull
+    {
+        get
+        {
+            List<List<string>> retVal = new();
+
+            for (int i = 0; i < rowsBlock; i++)
+                for (int j = 0; i < colsBlock; j++)
+                {
+                    List<string> list = GetSuBlock(i, j);
+                    retVal.Add(list);
+                }
+
+            return retVal;
+        }
+    }
+
     // Get Solving Unit - for a block
-    List<string> GetSuBlock(int colNoBlock, int rowNoBlock)
+    List<string> GetSuBlock(int rowNoBlock, int colNoBlock)
     {
         List<string> retVal = new List<string>();
 
+        string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
+
         for (int i = 0; i < rowsBlock; i++)
             for (int j = 0; j < colsBlock; j++)
-                retVal.Add(string.Format(cellIdPrefix, string.Format(blockIdPrefix, rowNoBlock - 1, colNoBlock - 1), j, i));
+                retVal.Add(string.Format(cellIdPrefix, blockId, j, i));
 
 
         return retVal;
@@ -249,7 +278,7 @@
 
         if (debuggingOn)
         {
-            List<string> cell = SuHoriFullFlattened; // SuVertFullFlattened; // SuHoriFullFlattened;
+            List<string> cell = SuBlockFullFlattened; // SuVertFullFlattened; // SuHoriFullFlattened; // SuBlockFullFlattened
 
             if (index > cell.Count)
             {
