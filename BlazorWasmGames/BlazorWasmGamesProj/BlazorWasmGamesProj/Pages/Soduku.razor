@@ -63,7 +63,8 @@
 </div>
 
 <br>
-<button @onclick="( async () => await Debug1())">Debug</button>
+<button @onclick="( async () => await Debug1())">Debug1</button>
+<button @onclick="( async () => await Debug2())">Debug2</button>
 <br />
 
 
@@ -208,7 +209,7 @@
             List<List<string>> retVal = new();
 
             for (int i = 0; i < rowsBlock; i++)
-                for (int j = 0; i < colsBlock; j++)
+                for (int j = 0; j < colsBlock; j++)
                 {
                     List<string> list = GetSuBlock(i, j);
                     retVal.Add(list);
@@ -227,7 +228,11 @@
 
         for (int i = 0; i < rowsBlock; i++)
             for (int j = 0; j < colsBlock; j++)
-                retVal.Add(string.Format(cellIdPrefix, blockId, j, i));
+            {
+                string id = string.Format(cellIdPrefix, blockId, j, i);
+                Console.WriteLine($"ID = {id}");
+                retVal.Add(id);
+            }
 
 
         return retVal;
@@ -240,6 +245,13 @@
         InitTimer();
         await Task.Delay(1);
         //DeInitTimer();
+    }
+
+    async Task Debug2()
+    {
+        List<string> cells = SuBlockFullFlattened;
+        //await Task.FromResult(0);
+        await Task.Delay(1);
     }
 
     protected override Task OnInitializedAsync()
