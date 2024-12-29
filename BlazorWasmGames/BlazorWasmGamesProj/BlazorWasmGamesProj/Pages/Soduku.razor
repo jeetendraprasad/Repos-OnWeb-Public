@@ -154,19 +154,17 @@
     {
         List<string> retVal = new List<string>();
 
-        int rowA = (int)(rowNoSoduku / colsBlock);
-
-        //Debug.Print("rowA = " + rowA.ToString());
+        int p = (int)(rowNoSoduku / colsBlock);
+        int r = (int)(rowNoSoduku % colsBlock);
 
         for (int j = 0; j < rowsBlock * colsBlock; j++)
         {
-            int colA = (int)(j / rowsBlock);
+            int q = (int)(j / rowsBlock);
+            int s = (int)(j % rowsBlock);
 
-            //Debug.Print("colA = " + colA.ToString());
+            string blockId = GetBlockId(p, q);
 
-            string blockId = GetBlockId(rowA, colA);
-
-            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(rowNoSoduku % colsBlock), (int)(j % rowsBlock)));
+            retVal.Add(string.Format(cellIdPrefix, blockId, r, s));
         }
 
         return retVal;
@@ -251,7 +249,7 @@
 
         if (debuggingOn)
         {
-            List<string> cell = SuVertFullFlattened; // SuHoriFullFlattened;
+            List<string> cell = SuHoriFullFlattened; // SuVertFullFlattened; // SuHoriFullFlattened;
 
             if (index > cell.Count)
             {
