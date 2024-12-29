@@ -110,9 +110,11 @@
 
             for (int i = 0; i < rowsBlock * colsBlock; i++)
             {
-                List<string> list = GetSuHori(i);
-                retVal.Add(list);
-
+                //if(i == 1)
+                {
+                    List<string> list = GetSuHori(i);
+                    retVal.Add(list);
+                }
             }
 
             return retVal;
@@ -136,7 +138,7 @@
 
             string blockId = GetBlockId(rowA, colA);
 
-            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(rowNoSoduku / rowsBlock), (int)(j % rowsBlock)));
+            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(rowNoSoduku % colsBlock), (int)(j % rowsBlock)));
         }
 
         return retVal;
