@@ -69,7 +69,7 @@
 
 @code {
 
-    int rowsBlock = 2;
+    int rowsBlock = 3;
     int colsBlock = 2;
 
     bool editMode = true;
@@ -126,7 +126,7 @@
     {
         List<string> retVal = new List<string>();
 
-        int rowA = (int)(rowNoSoduku / rowsBlock);
+        int rowA = (int)((rowNoSoduku) / colsBlock);
 
         //Debug.Print("rowA = " + rowA.ToString());
 
