@@ -42,7 +42,7 @@
                         {
                             string cellId = GetCellId(blocId, k, l);
 
-                            <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle()" id="@cellId">
+                            <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId)" id="@cellId">
                                 @cellId
                                 <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
                                 <br />
@@ -62,6 +62,23 @@
 
 </div>
 
+<br />
+
+<div style="@GetSodukuStyle()">
+    @foreach (var cellId in SuHoriFullFlattened)
+    {
+        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId)" id="@cellId">
+            @cellId
+            <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
+            <br />
+            @for (int m = 0; m < rowsBlock * colsBlock; m++)
+            {
+                <button style="font-size: 0.5em;" id="@(cellId+":H"+(m+1).ToString())">@(m + 1)</button>
+            }
+        </div>
+    }
+</div>
+
 <br>
 <button @onclick="( async () => await Debug1())">Debug1</button>
 <button @onclick="( async () => await Debug2())">Debug2</button>
@@ -70,7 +87,7 @@
 
 @code {
 
-    int rowsBlock = 3;
+    int rowsBlock = 2;
     int colsBlock = 2;
 
     bool editMode = true;
@@ -81,10 +98,9 @@
 
     bool debuggingOn = false;
     int index = 0;
-    //string highlightBlock = "";
     string highlightCell = "";
 
-    List<string> BasicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
+
 
     string blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
     string cellIdPrefix = "{0}:C[{1},{2}]";             // cell names are BLOCK_ID:[{0-based rows},{0-based cols}]
@@ -92,10 +108,41 @@
 
     string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
     string GetBlockRowStyle() => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;";
-    string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;background-color:{BasicHtmlColors[colorIndex % BasicHtmlColors.Count]};";
+    string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;background-color:red;";
     string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
     string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
-    string GetCellStyle() => $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
+    string GetCellStyle(string? cellId = null)
+    {
+        string style = $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
+
+        if (cellId != null)
+        {
+            int x, y;
+            GetBlockRowAndBlockColFromCellId(cellId, out x, out y);
+            string color = GetBlockColor(x, y);
+            style += $"background-color:{color};";
+        }
+
+        return style;
+    }
+
+    void GetBlockRowAndBlockColFromCellId(string cellId, out int row, out int col)
+    {
+        row = col = -1;
+
+        // cellIdPrefix = "{0}:C[{1},{2}]"
+        string[]? splitted = cellId.Split( '[' , ',' , ']' );
+
+        int.TryParse(splitted[1], out row);
+        int.TryParse(splitted[2], out col);
+    }
+
+    string GetBlockColor(int row, int col)
+    {
+        int ind = rowsBlock * row + col;
+        List<string> basicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
+        return basicHtmlColors[ind % basicHtmlColors.Count];
+    }
 
     List<string> SuVertFullFlattened
     {
@@ -243,15 +290,15 @@
         index = 0;
         debuggingOn = true;
         InitTimer();
-        await Task.Delay(1);
+        await Task.FromResult(0);
         //DeInitTimer();
     }
 
     async Task Debug2()
     {
         List<string> cells = SuBlockFullFlattened;
-        //await Task.FromResult(0);
-        await Task.Delay(1);
+        await Task.FromResult(0);
+        //await Task.Delay(1);
     }
 
     protected override Task OnInitializedAsync()
