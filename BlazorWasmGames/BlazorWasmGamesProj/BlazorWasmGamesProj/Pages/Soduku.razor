@@ -96,6 +96,34 @@
     string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
     string GetCellStyle() => $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
 
+    List<string> SuVertFullFlattened
+    {
+        get
+        {
+            List<string> list = SuVertFull.Flatten();
+            Console.WriteLine(string.Join("    ", list));
+            return list;
+        }
+    }
+    List<List<string>> SuVertFull
+    {
+        get
+        {
+            List<List<string>> retVal = new();
+
+            for (int i = 0; i < rowsBlock * colsBlock; i++)
+            {
+                //if(i == 1)
+                {
+                    List<string> list = GetSuVert(i);
+                    retVal.Add(list);
+                }
+            }
+
+            return retVal;
+        }
+    }
+
     List<string> SuHoriFullFlattened {
         get {
             List<string> list = SuHoriFull.Flatten();
@@ -126,7 +154,7 @@
     {
         List<string> retVal = new List<string>();
 
-        int rowA = (int)((rowNoSoduku) / colsBlock);
+        int rowA = (int)(rowNoSoduku / colsBlock);
 
         //Debug.Print("rowA = " + rowA.ToString());
 
@@ -149,19 +177,17 @@
     {
         List<string> retVal = new List<string>();
 
-        int colA = (int)(colNoSoduku / rowsBlock);
+        int q = (int)(colNoSoduku / rowsBlock);
+        int s =      (colNoSoduku % rowsBlock);
 
-        //Debug.Print("colA = " + colA.ToString());
-
-        for (int j = 0; j < rowsBlock * colsBlock; j++)
+        for (int i = 0; i < rowsBlock * colsBlock; i++)
         {
-            int rowA = (int)(j / colsBlock);
+            int p = (int)(i / colsBlock);
+            int r = (int)(i % colsBlock);
 
-            //Debug.Print("rowA = " + rowA.ToString());
+            string blockId = GetBlockId(p, q);
 
-            string blockId = GetBlockId(rowA, colA);
-
-            retVal.Add(string.Format(cellIdPrefix, blockId, (int)(j % colsBlock), (int)(colNoSoduku / rowsBlock) - 1));
+            retVal.Add(string.Format(cellIdPrefix, blockId, r, s));
         }
 
         return retVal;
@@ -225,7 +251,7 @@
 
         if (debuggingOn)
         {
-            List<string> cell = SuHoriFullFlattened;
+            List<string> cell = SuVertFullFlattened; // SuHoriFullFlattened;
 
             if (index > cell.Count)
             {
