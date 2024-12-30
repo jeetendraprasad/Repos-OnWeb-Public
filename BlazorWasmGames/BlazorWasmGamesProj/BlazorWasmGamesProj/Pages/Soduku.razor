@@ -11,8 +11,8 @@
 <br />
 
 <div>
-    <input type="text" name="rows_size" @bind=@rowsBlock placeholder="Rows" />
-    <input type="text" name="cols_size" @bind=@colsBlock placeholder="Columns" />
+    <input type="number" name="rows_size" @bind=@rowsBlock placeholder="Rows" @bind:after="ValidateAndSodukuResize" />
+    <input type="number" name="cols_size" @bind=@colsBlock placeholder="Columns" @bind:after="ValidateAndSodukuResize" />
 </div>
 
 <br />
@@ -25,47 +25,7 @@
 <br />
 
 <div style="@GetSodukuStyle()">
-
-    @for (int i = 0; i < colsBlock; i++)
-    {
-        <div style="@GetBlockRowStyle()">
-
-            @for (int j = 0; j < rowsBlock; j++)
-            {
-                string blocId = GetBlockId(j, i);
-
-                <div style="@GetBlockStyle(i*rowsBlock+j)" id="@blocId">
-
-                    @for (int k = 0; k < colsBlock; k++)
-                    {
-                        @for (int l = 0; l < rowsBlock; l++)
-                        {
-                            string cellId = GetCellId(blocId, k, l);
-
-                            <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId)" id="@cellId">
-                                @cellId
-                                <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
-                                <br />
-                                @for (int m = 0; m < rowsBlock * colsBlock; m++)
-                                {
-                                    <button style="font-size: 0.5em;" id="@(cellId+":H"+(m+1).ToString())">@(m + 1)</button>
-                                }
-                            </div>
-                        }
-                    }
-
-                </div>
-            }
-
-        </div>
-    }
-
-</div>
-
-<br />
-
-<div style="@GetSodukuStyle()">
-    @foreach (var cellId in SuHoriFullFlattened)
+    @foreach (var cellId in _sodukuGame.SuHoriFullFlattened)
     {
         <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId)" id="@cellId">
             @cellId

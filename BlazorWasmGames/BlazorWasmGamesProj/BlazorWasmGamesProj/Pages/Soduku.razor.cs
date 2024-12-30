@@ -11,19 +11,29 @@ namespace BlazorWasmGamesProj.Pages
 
         bool editMode = true;
 
-        //int GetRowsBlock() { return rowsBlock; }
-
         public Soduku()
         {
-            sodukuGame = new(rowsBlock, colsBlock, sodukuSizeInPx);
+            _sodukuGame = new(rowsBlock, colsBlock);
         }
 
 
-        SodukuGame sodukuGame;
+        SodukuGame _sodukuGame;
 
 
 
         int sodukuSizeInPx = 900;
+
+        private async Task ValidateAndSodukuResize()
+        {
+            rowsBlock = rowsBlock < 2 ? 2 : rowsBlock;
+            colsBlock = colsBlock < 2 ? 2 : colsBlock;
+
+            rowsBlock = rowsBlock > 3 ? 3 : rowsBlock;
+            colsBlock = colsBlock > 3 ? 3 : colsBlock;
+
+            _sodukuGame.ReInit(rowsBlock, colsBlock);
+            await Task.FromResult(0);
+        }
 
         System.Timers.Timer timer = new System.Timers.Timer();
 
@@ -32,16 +42,11 @@ namespace BlazorWasmGamesProj.Pages
         string highlightCell = "";
 
 
-
-        string blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
-        string cellIdPrefix = "{0}:C[{1},{2}]";             // cell names are BLOCK_ID:[{0-based rows},{0-based cols}]
-
-
         string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
         string GetBlockRowStyle() => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;";
         string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;background-color:red;";
-        string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
-        string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
+        //string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
+        //string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
         string GetCellStyle(string? cellId = null)
         {
             string style = $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
@@ -75,149 +80,11 @@ namespace BlazorWasmGamesProj.Pages
             return basicHtmlColors[ind % basicHtmlColors.Count];
         }
 
-        List<string> SuVertFullFlattened
-        {
-            get
-            {
-                List<string> list = SuVertFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
-            }
-        }
-        List<List<string>> SuVertFull
-        {
-            get
-            {
-                List<List<string>> retVal = new();
-
-                for (int i = 0; i < rowsBlock * colsBlock; i++)
-                {
-                    //if(i == 1)
-                    {
-                        List<string> list = GetSuVert(i);
-                        retVal.Add(list);
-                    }
-                }
-
-                return retVal;
-            }
-        }
-
-        List<string> SuHoriFullFlattened
-        {
-            get
-            {
-                List<string> list = SuHoriFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
-            }
-        }
-        List<List<string>> SuHoriFull
-        {
-            get
-            {
-                List<List<string>> retVal = new();
-
-                for (int i = 0; i < rowsBlock * colsBlock; i++)
-                {
-                    //if(i == 1)
-                    {
-                        List<string> list = GetSuHori(i);
-                        retVal.Add(list);
-                    }
-                }
-
-                return retVal;
-            }
-        }
-
-        // Get Solving Unit - Horigontal list
-        List<string> GetSuHori(int rowNoSoduku)
-        {
-            List<string> retVal = new List<string>();
-
-            int p = (int)(rowNoSoduku / colsBlock);
-            int r = (int)(rowNoSoduku % colsBlock);
-
-            for (int j = 0; j < rowsBlock * colsBlock; j++)
-            {
-                int q = (int)(j / rowsBlock);
-                int s = (int)(j % rowsBlock);
-
-                string blockId = GetBlockId(p, q);
-
-                retVal.Add(string.Format(cellIdPrefix, blockId, r, s));
-            }
-
-            return retVal;
-        }
-
-        // Get Solving Unit - Vertical list
-        List<string> GetSuVert(int colNoSoduku)
-        {
-            List<string> retVal = new List<string>();
-
-            int q = (int)(colNoSoduku / rowsBlock);
-            int s = (colNoSoduku % rowsBlock);
-
-            for (int i = 0; i < rowsBlock * colsBlock; i++)
-            {
-                int p = (int)(i / colsBlock);
-                int r = (int)(i % colsBlock);
-
-                string blockId = GetBlockId(p, q);
-
-                retVal.Add(string.Format(cellIdPrefix, blockId, r, s));
-            }
-
-            return retVal;
-        }
-
-        List<string> SuBlockFullFlattened
-        {
-            get
-            {
-                List<string> list = SuBlockFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
-            }
-        }
-
-        List<List<string>> SuBlockFull
-        {
-            get
-            {
-                List<List<string>> retVal = new();
-
-                for (int i = 0; i < rowsBlock; i++)
-                    for (int j = 0; j < colsBlock; j++)
-                    {
-                        List<string> list = GetSuBlock(i, j);
-                        retVal.Add(list);
-                    }
-
-                return retVal;
-            }
-        }
-
-        // Get Solving Unit - for a block
-        List<string> GetSuBlock(int rowNoBlock, int colNoBlock)
-        {
-            List<string> retVal = new List<string>();
-
-            string blockId = string.Format(blockIdPrefix, rowNoBlock, colNoBlock);
-
-            for (int i = 0; i < rowsBlock; i++)
-                for (int j = 0; j < colsBlock; j++)
-                {
-                    string id = string.Format(cellIdPrefix, blockId, j, i);
-                    Console.WriteLine($"ID = {id}");
-                    retVal.Add(id);
-                }
 
 
-            return retVal;
-        }
+
+
+
 
         async Task Debug1()
         {
@@ -230,7 +97,10 @@ namespace BlazorWasmGamesProj.Pages
 
         async Task Debug2()
         {
-            List<string> cells = SuBlockFullFlattened;
+            List<string> cells = _sodukuGame.SuBlockFullFlattened;
+
+            highlightCell = "B[0,1]:C[1,0]";
+
             await Task.FromResult(0);
             //await Task.Delay(1);
         }
@@ -271,7 +141,7 @@ namespace BlazorWasmGamesProj.Pages
 
             if (debuggingOn)
             {
-                List<string> cell = SuBlockFullFlattened; // SuVertFullFlattened; // SuHoriFullFlattened; // SuBlockFullFlattened
+                List<string> cell = _sodukuGame.SuBlockFullFlattened; // SuVertFullFlattened; // SuHoriFullFlattened; // SuBlockFullFlattened
 
                 if (index > cell.Count)
                 {
