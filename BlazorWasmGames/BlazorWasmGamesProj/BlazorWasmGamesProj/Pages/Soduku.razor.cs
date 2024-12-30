@@ -115,7 +115,7 @@ namespace BlazorWasmGamesProj.Pages
             if (!timer.Enabled)
             {
                 timer = new System.Timers.Timer();
-                timer.Interval = 1000;
+                timer.Interval = 500;
                 timer.Elapsed += OnTimerElapsed;
                 timer.Enabled = true;
             }

@@ -27,7 +27,7 @@
 <div style="@GetSodukuStyle()">
     @foreach (var cellId in _sodukuGame.SuHoriFullFlattened)
     {
-        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId)" id="@cellId">
+        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
             @cellId
             <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
             <br />
