@@ -11,12 +11,17 @@ namespace BlazorWasmGamesProj.Pages
 
         bool editMode = true;
 
-        int GetRowsBlock() { return rowsBlock; }
+        //int GetRowsBlock() { return rowsBlock; }
+
+        public Soduku()
+        {
+            sodukuGame = new(rowsBlock, colsBlock, sodukuSizeInPx);
+        }
 
 
-        SodukuGame sodukuGame = new(rowsBlock: GetRowsBlock(),
-                                    colsBlock: colsBlock,
-                                    sodukuSizeInPx: sodukuSizeInPx);
+        SodukuGame sodukuGame;
+
+
 
         int sodukuSizeInPx = 900;
 
