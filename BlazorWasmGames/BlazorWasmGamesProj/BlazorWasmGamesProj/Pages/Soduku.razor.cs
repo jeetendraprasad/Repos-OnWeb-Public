@@ -120,9 +120,10 @@ namespace BlazorWasmGamesProj.Pages
             //await Task.Delay(1);
         }
 
-        async Task AddPositions(ChangeEventArgs args)
+        async Task AddPositions(ChangeEventArgs args, string cellId)
         {
             Console.WriteLine(args.Value);
+            Console.WriteLine(cellId);
 
             await Task.FromResult(0);
         }
