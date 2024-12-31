@@ -34,7 +34,7 @@
             SuHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
-            GameState = SodukuGameState.CalculationDone;
+            GameState = SodukuGameState.CalculationDone_Or_EditModeBegin;
         }
 
         public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
@@ -196,8 +196,9 @@
 
     public enum SodukuGameState
     {
-        CalculationPending = 0,
-        CalculationDone    = 1,
-        EditMode           = 2,
+        CalculationPending                  = 0,
+        CalculationDone_Or_EditModeBegin    = 1,
+        EditModeDone_Or_SolvingBegin        = 2,
+        SolvingDone                         = 3,
     }
 }
