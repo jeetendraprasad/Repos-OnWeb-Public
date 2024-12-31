@@ -32,6 +32,9 @@ namespace BlazorWasmGamesProj.Pages
             colsBlock = colsBlock > 3 ? 3 : colsBlock;
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
+
+            _sodukuGame.Recalculate();
+
             await Task.FromResult(0);
         }
 
@@ -107,6 +110,8 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
+            _sodukuGame.ReInit(rowsBlock, colsBlock);
+            _sodukuGame.Recalculate();
             return base.OnInitializedAsync();
         }
 
