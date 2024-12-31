@@ -1,11 +1,19 @@
 ﻿namespace BlazorWasmGamesProj.Code
 {
+
+
     public class SodukuGame
     {
         int _rowsBlock = 0, _colsBlock = 0;
 
         const string _blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
         const string _cellIdPrefix = "{0}:C[{1},{2}]";             // cell names are BLOCK_ID:[{0-based rows},{0-based cols}]
+
+        private List<string> _suBlockFullFlattened = new();
+        private List<string> _suHoriFullFlattened = new();
+        private List<string> _suVertFullFlattened = new();
+
+        public SodukuGameState GameState { get; private set; } = SodukuGameState.CalculationPending;
 
         public SodukuGame(int rowsBlock, int colsBlock)
         {
@@ -16,6 +24,17 @@
         {
             _rowsBlock = rowsBlock;
             _colsBlock = colsBlock;
+
+            GameState = SodukuGameState.CalculationPending;
+        }
+
+        public void Recalculate()
+        {
+            SuBlockFullFlattened = SuBlockFull.Flatten();
+            SuHoriFullFlattened = SuHoriFull.Flatten();
+            _suVertFullFlattened = SuVertFull.Flatten();
+
+            GameState = SodukuGameState.CalculationDone;
         }
 
         public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
@@ -27,12 +46,13 @@
         {
             get
             {
-                List<string> list = SuBlockFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
+                return _suBlockFullFlattened;
+            }
+            private set
+            {
+                _suBlockFullFlattened = value;
             }
         }
-
         List<List<string>> SuBlockFull
         {
             get
@@ -74,9 +94,11 @@
         {
             get
             {
-                List<string> list = SuHoriFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
+                return _suHoriFullFlattened;
+            }
+            private set
+            {
+                _suHoriFullFlattened = value;
             }
         }
         List<List<string>> SuHoriFull
@@ -124,9 +146,11 @@
         {
             get
             {
-                List<string> list = SuVertFull.Flatten();
-                Console.WriteLine(string.Join("    ", list));
-                return list;
+                return _suVertFullFlattened;
+            }
+            private set
+            {
+                _suVertFullFlattened = value;
             }
         }
         List<List<string>> SuVertFull
@@ -168,5 +192,12 @@
 
             return retVal;
         }
+    }
+
+    public enum SodukuGameState
+    {
+        CalculationPending = 0,
+        CalculationDone    = 1,
+        EditMode           = 2,
     }
 }
