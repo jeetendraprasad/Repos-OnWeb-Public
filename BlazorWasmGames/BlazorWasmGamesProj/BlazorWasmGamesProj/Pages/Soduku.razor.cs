@@ -102,9 +102,12 @@ namespace BlazorWasmGamesProj.Pages
 
         async Task Debug2()
         {
-            List<string> cells = _sodukuGame.SuBlockFullFlattened;
+            foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
+            {
+                Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
+            }
 
-            highlightCell = "B[0,1]:C[1,0]";
+            Console.WriteLine("Moves : " + string.Join(',', _sodukuGame.Moves));
 
             await Task.FromResult(0);
             //await Task.Delay(1);
@@ -120,10 +123,9 @@ namespace BlazorWasmGamesProj.Pages
             //await Task.Delay(1);
         }
 
-        async Task AddPositions(ChangeEventArgs args, string cellId)
+        async Task AddMove(ChangeEventArgs args, string cellId)
         {
-            Console.WriteLine(args.Value);
-            Console.WriteLine(cellId);
+            _sodukuGame.AddMove(cellId, args?.Value?.ToString() ?? "");
 
             await Task.FromResult(0);
         }

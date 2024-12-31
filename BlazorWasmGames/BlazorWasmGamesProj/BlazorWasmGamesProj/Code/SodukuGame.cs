@@ -13,6 +13,30 @@
         private List<string> _suHoriFullFlattened = new();
         private List<string> _suVertFullFlattened = new();
 
+        //private Dictionary<string, int> moves = new();
+        private List<SodukuGameMove> moves = new();
+
+        public List<SodukuGameMove> Moves
+        {
+            get
+            {
+                return moves;
+            }
+        }
+        public Dictionary<string, string> Positions
+        {
+            get
+            {
+                Dictionary<string, string> posns = SuHoriFullFlattened.ToDictionary(item => item, item => "0");
+                foreach (SodukuGameMove item in moves)
+                {
+                    posns[item.CellId] = item.CellValue;
+                }
+
+                return posns;
+            }
+        }
+
         public SodukuGameState GameState { get; private set; } = SodukuGameState.CalculationPending;
 
         public SodukuGame(int rowsBlock, int colsBlock)
@@ -30,11 +54,20 @@
 
         public void Recalculate()
         {
-            SuBlockFullFlattened = SuBlockFull.Flatten();
-            SuHoriFullFlattened = SuHoriFull.Flatten();
+            _suBlockFullFlattened = SuBlockFull.Flatten();
+            _suHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
+            //moves = new Dictionary<string, int>(_rowsBlock * _colsBlock);
+            //moves = SuHoriFullFlattened.ToDictionary( item => item, item => 0);
+
             GameState = SodukuGameState.CalculationDone_Or_EditModeBegin;
+        }
+
+        public bool AddMove(string cellId, string cellValue)
+        {
+            moves.Add(new SodukuGameMove() { CellId = cellId, CellValue = cellValue});
+            return true;
         }
 
         public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
@@ -69,7 +102,6 @@
                 return retVal;
             }
         }
-
         // Get Solving Unit - for a block
         List<string> GetSuBlock(int rowNoBlock, int colNoBlock)
         {
@@ -88,7 +120,6 @@
 
             return retVal;
         }
-
 
         public List<string> SuHoriFullFlattened
         {
@@ -119,7 +150,6 @@
                 return retVal;
             }
         }
-
         // Get Solving Unit - Horigontal list
         List<string> GetSuHori(int rowNoSoduku)
         {
@@ -140,7 +170,6 @@
 
             return retVal;
         }
-
 
         public List<string> SuVertFullFlattened
         {
@@ -171,7 +200,6 @@
                 return retVal;
             }
         }
-
         // Get Solving Unit - Vertical list
         List<string> GetSuVert(int colNoSoduku)
         {
@@ -200,5 +228,23 @@
         CalculationDone_Or_EditModeBegin    = 1,
         EditModeDone_Or_SolvingBegin        = 2,
         SolvingDone                         = 3,
+    }
+
+    public class SodukuGameMove
+    {
+        public string CellId { get; set; } = "";
+        public string CellValue { get; set; } = "";
+
+        public override string ToString()
+        {
+            string retVal = "";
+
+            retVal += $"CellId    = {CellId}";
+            retVal += " ";
+            retVal += $"CellValue = {CellValue}";
+
+
+            return retVal;
+        }
     }
 }
