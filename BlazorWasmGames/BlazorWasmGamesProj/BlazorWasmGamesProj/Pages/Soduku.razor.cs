@@ -1,4 +1,6 @@
 ﻿using BlazorWasmGamesProj.Code;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
 using System.Timers;
 
@@ -106,6 +108,23 @@ namespace BlazorWasmGamesProj.Pages
 
             await Task.FromResult(0);
             //await Task.Delay(1);
+        }
+
+        async Task Positions()
+        {
+            List<string> cells = _sodukuGame.SuBlockFullFlattened;
+
+            highlightCell = "B[0,1]:C[1,0]";
+
+            await Task.FromResult(0);
+            //await Task.Delay(1);
+        }
+
+        async Task AddPositions(ChangeEventArgs args)
+        {
+            Console.WriteLine(args.Value);
+
+            await Task.FromResult(0);
         }
 
         protected override Task OnInitializedAsync()

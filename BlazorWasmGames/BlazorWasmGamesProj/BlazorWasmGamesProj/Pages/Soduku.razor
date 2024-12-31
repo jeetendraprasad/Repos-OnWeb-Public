@@ -29,7 +29,7 @@
     {
         <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
             @cellId
-            <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" />
+            <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" @onchange="AddPositions" />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {
