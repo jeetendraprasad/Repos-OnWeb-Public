@@ -7,21 +7,21 @@
 
 @implements IDisposable
 
-<h3>Soduku</h3>
+<h1>Soduku</h1>
 <br />
 
 <div>
+    <h3>Enter Dimensions</h3>
     <input type="number" name="rows_size" @bind=@rowsBlock placeholder="Rows" @bind:after="ValidateAndSodukuResize" />
     <input type="number" name="cols_size" @bind=@colsBlock placeholder="Columns" @bind:after="ValidateAndSodukuResize" />
 </div>
 
 <br />
 
-<input type="checkbox" id="edit-mode" name="edit-mode" @bind=@editMode>
-<label for="edit-mode"> Edit?</label>
-<br>
+<button class="btn btn-primary" @onclick="@(async (args) => await SaveNSolve())">Save and Solve</button>
 
 
+<br />
 <br />
 
 <div style="@GetSodukuStyle()">

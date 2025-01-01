@@ -200,5 +200,12 @@ namespace BlazorWasmGamesProj.Pages
         {
             timer.Dispose();
         }
+
+        async Task SaveNSolve()
+        {
+            _sodukuGame.SaveNSolve();
+
+            await Task.FromResult(0);
+        }
     }
 }

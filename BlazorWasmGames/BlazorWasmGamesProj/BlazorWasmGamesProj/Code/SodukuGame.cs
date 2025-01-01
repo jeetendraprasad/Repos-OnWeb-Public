@@ -1,4 +1,5 @@
-﻿namespace BlazorWasmGamesProj.Code
+﻿
+namespace BlazorWasmGamesProj.Code
 {
 
 
@@ -68,6 +69,30 @@
         {
             moves.Add(new SodukuGameMove() { CellId = cellId, CellValue = cellValue});
             return true;
+        }
+
+        void Solve()
+        {
+            CheckHori();
+        }
+
+        private void CheckHori()
+        {
+            foreach (KeyValuePair<string, string> elem in Positions)
+            {
+                Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
+            }
+
+            Console.WriteLine("Moves : " + string.Join(',', Moves));
+        }
+
+        public void SaveNSolve()
+        {
+            this.GameState = SodukuGameState.EditModeDone_Or_SolvingBegin;
+
+            Solve();
+
+            this.GameState = SodukuGameState.SolvingDone;
         }
 
         public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
@@ -235,6 +260,8 @@
         public string CellId { get; set; } = "";
         public string CellValue { get; set; } = "";
 
+        public SodukuGameMoveMode MoveMode { get; set; } = SodukuGameMoveMode.Manual;
+
         public override string ToString()
         {
             string retVal = "";
@@ -246,5 +273,11 @@
 
             return retVal;
         }
+    }
+
+    public enum SodukuGameMoveMode
+    {
+        Manual,
+        Automatic,
     }
 }
