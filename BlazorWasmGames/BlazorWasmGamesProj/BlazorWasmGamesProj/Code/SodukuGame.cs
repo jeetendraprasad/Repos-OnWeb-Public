@@ -1,4 +1,8 @@
 ﻿
+using System.Globalization;
+using System.Linq;
+using System.Reflection.PortableExecutable;
+
 namespace BlazorWasmGamesProj.Code
 {
 
@@ -13,6 +17,8 @@ namespace BlazorWasmGamesProj.Code
         private List<string> _suBlockFullFlattened = new();
         private List<string> _suHoriFullFlattened = new();
         private List<string> _suVertFullFlattened = new();
+        private static List<string> _hints = new();
+        public static List<string> Hints { get { return _hints; } }
 
         //private Dictionary<string, int> moves = new();
         private List<SodukuGameMove> moves = new();
@@ -31,7 +37,7 @@ namespace BlazorWasmGamesProj.Code
                 Dictionary<string, string> posns = SuHoriFullFlattened.ToDictionary(item => item, item => "0");
                 foreach (SodukuGameMove item in moves)
                 {
-                    posns[item.CellId] = item.CellValue;
+                    posns[item.CellId] = item.GetCellValue();
                 }
 
                 return posns;
@@ -62,21 +68,18 @@ namespace BlazorWasmGamesProj.Code
             //moves = new Dictionary<string, int>(_rowsBlock * _colsBlock);
             //moves = SuHoriFullFlattened.ToDictionary( item => item, item => 0);
 
+            _hints = Enumerable.Range(1, _rowsBlock * _colsBlock).Select(x => x.ToString(CultureInfo.InvariantCulture)).ToList();
+
             GameState = SodukuGameState.CalculationDone_Or_EditModeBegin;
         }
 
         public bool AddMove(string cellId, string cellValue)
         {
-            moves.Add(new SodukuGameMove() { CellId = cellId, CellValue = cellValue});
+            moves.Add(new SodukuGameMove(cellId, cellValue, _rowsBlock * _colsBlock));
             return true;
         }
 
         void Solve()
-        {
-            CheckHori();
-        }
-
-        private void CheckHori()
         {
             foreach (KeyValuePair<string, string> elem in Positions)
             {
@@ -84,6 +87,21 @@ namespace BlazorWasmGamesProj.Code
             }
 
             Console.WriteLine("Moves : " + string.Join(',', Moves));
+
+            CheckHori();
+        }
+
+        private void CheckHori()
+        {
+            for (int i = 0; i < SuHoriFullFlattened.Count; i++)
+            {
+                List<string> su = SuHoriFullFlattened.Skip(i * _rowsBlock * _colsBlock).Take(_rowsBlock * _colsBlock).ToList();
+
+                for (int j = 0; j < su.Count; j++)
+                {
+
+                }
+            }
         }
 
         public void SaveNSolve()
@@ -249,18 +267,109 @@ namespace BlazorWasmGamesProj.Code
 
     public enum SodukuGameState
     {
-        CalculationPending                  = 0,
-        CalculationDone_Or_EditModeBegin    = 1,
-        EditModeDone_Or_SolvingBegin        = 2,
-        SolvingDone                         = 3,
+        CalculationPending = 0,
+        CalculationDone_Or_EditModeBegin = 1,
+        EditModeDone_Or_SolvingBegin = 2,
+        SolvingDone = 3,
     }
 
     public class SodukuGameMove
     {
         public string CellId { get; set; } = "";
-        public string CellValue { get; set; } = "";
+        string CellValue { get; set; } = "";
+
+        public List<string> Hints { get; set; } = new();
+
+        private int MaxHint { get; set;} 
 
         public SodukuGameMoveMode MoveMode { get; set; } = SodukuGameMoveMode.Manual;
+
+        public SodukuGameMove(string cellId, string cellValue, int maxHint /* Soduku block rows into size, 1 based */, SodukuGameMoveMode MoveMode = SodukuGameMoveMode.Manual)
+        {
+            CellId = cellId;
+            CellValue = cellValue;
+
+            MaxHint = maxHint;
+
+            Hints = Enumerable.Range(1, MaxHint).Select(x => x.ToString(CultureInfo.InvariantCulture)).ToList();
+
+            if (Hints.Contains(CellValue))
+                Hints = []; // If cell contains any value that can b hint then we remove all hints
+        }
+
+        public string GetCellValue() => CellValue;
+        public void SetCellValue(string cellValue, bool resetHint /* true is complete reset, false is bring backremoved value */)
+        {
+            // cases
+            // 1: old CellValue = "" , new cellValue = "", resetHint = false(NA)
+            // 2: old CellValue = "" , new cellValue = "", resetHint = true(NA)
+            // 3: old CellValue = "" , new cellValue = "3", resetHint = false(NA)
+            // 4: old CellValue = "" , new cellValue = "3", resetHint = true(NA)
+            // 5: old CellValue = "4", new cellValue = "", resetHint = false
+            // 6: old CellValue = "4", new cellValue = "", resetHint = true
+            // 7: old CellValue = "4", new cellValue = "3", resetHint = false
+            // 8: old CellValue = "4", new cellValue = "3", resetHint = true
+
+            // cases
+            if (string.IsNullOrEmpty(CellValue) && string.IsNullOrEmpty(cellValue) && resetHint == false /* NA */ )
+            {
+                // 1: old CellValue = "" , new cellValue = "", resetHint = false(NA)
+                // Nothing to do here
+            }
+            else if (string.IsNullOrEmpty(CellValue) && string.IsNullOrEmpty(cellValue) && resetHint == true /* NA */ )
+            {
+                // 2: old CellValue = "" , new cellValue = "", resetHint = true(NA)
+                // Nothing to do here
+            }
+            else if (string.IsNullOrEmpty(CellValue) && !string.IsNullOrEmpty(cellValue) && resetHint == false /* NA */ )
+            {
+                // 3: old CellValue = "" , new cellValue = "3", resetHint = false(NA)
+
+                if (Hints.Contains(cellValue))
+                    Hints = []; // If cell contains any value that can b hint then we remove all hints
+            }
+            else if (string.IsNullOrEmpty(CellValue) && !string.IsNullOrEmpty(cellValue) && resetHint == true /* NA */ )
+            {
+                // 4: old CellValue = "" , new cellValue = "3", resetHint = true(NA)
+
+                if (Hints.Contains(cellValue))
+                    Hints = []; // If cell contains any value that can b hint then we remove all hints
+            }
+            else if (!string.IsNullOrEmpty(CellValue) && string.IsNullOrEmpty(cellValue) && resetHint == false)
+            {
+                // 5: old CellValue = "4", new cellValue = "", resetHint = false
+
+                //if (Hints.Contains(CellValue))
+                Hints.Add(CellValue);
+            }
+            else if (!string.IsNullOrEmpty(CellValue) && string.IsNullOrEmpty(cellValue) && resetHint == true)
+            {
+                // 6: old CellValue = "4", new cellValue = "", resetHint = true
+
+                //if (Hints.Contains(CellValue))
+                Hints = Enumerable.Range(1, MaxHint).Select(x => x.ToString(CultureInfo.InvariantCulture)).ToList();
+            }
+            else if (!string.IsNullOrEmpty(CellValue) && !string.IsNullOrEmpty(cellValue) && resetHint == false)
+            {
+                // 7: old CellValue = "4", new cellValue = "3", resetHint = false
+
+                //if (Hints.Contains(CellValue))
+                Hints.RemoveAll(x => x == CellValue);
+                Hints.Add(cellValue);
+            }
+            else if (!string.IsNullOrEmpty(CellValue) && !string.IsNullOrEmpty(cellValue) && resetHint == true)
+            {
+                // 8: old CellValue = "4", new cellValue = "3", resetHint = true
+
+                Hints = Enumerable.Range(1, MaxHint).Select(x => x.ToString(CultureInfo.InvariantCulture)).ToList();
+                Hints.Add(cellValue);
+            }
+
+            CellValue = cellValue;
+
+            if (Hints.Contains(CellValue))
+                Hints = []; // If cell contains any value that can b hint then we remove all hints
+        }
 
         public override string ToString()
         {
