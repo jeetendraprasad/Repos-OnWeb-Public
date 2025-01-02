@@ -16,10 +16,13 @@ namespace BlazorWasmGamesProj.Pages
         public Soduku()
         {
             _sodukuGame = new(rowsBlock, colsBlock);
+            _cellIdValueField = new(rowsBlock * colsBlock);
         }
 
 
         SodukuGame _sodukuGame;
+
+        CellIdValueField _cellIdValueField;
 
 
 
@@ -34,6 +37,8 @@ namespace BlazorWasmGamesProj.Pages
             colsBlock = colsBlock > 3 ? 3 : colsBlock;
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
+
+            _cellIdValueField.Init(rowsBlock * colsBlock, 0);
 
             _sodukuGame.Recalculate();
 
@@ -85,12 +90,6 @@ namespace BlazorWasmGamesProj.Pages
             return basicHtmlColors[ind % basicHtmlColors.Count];
         }
 
-
-
-
-
-
-
         async Task Debug1()
         {
             index = 0;
@@ -113,16 +112,6 @@ namespace BlazorWasmGamesProj.Pages
             //await Task.Delay(1);
         }
 
-        async Task Positions()
-        {
-            List<string> cells = _sodukuGame.SuBlockFullFlattened;
-
-            highlightCell = "B[0,1]:C[1,0]";
-
-            await Task.FromResult(0);
-            //await Task.Delay(1);
-        }
-
         async Task AddMove(ChangeEventArgs args, string cellId)
         {
             _sodukuGame.AddMove(cellId, args?.Value?.ToString() ?? "");
@@ -132,6 +121,7 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
+            _cellIdValueField.Init(rowsBlock * colsBlock, 0);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
             _sodukuGame.Recalculate();
             return base.OnInitializedAsync();

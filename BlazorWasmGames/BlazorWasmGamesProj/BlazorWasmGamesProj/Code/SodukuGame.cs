@@ -1,4 +1,5 @@
 ﻿
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.PortableExecutable;
@@ -280,7 +281,7 @@ namespace BlazorWasmGamesProj.Code
 
         public List<string> Hints { get; set; } = new();
 
-        private int MaxHint { get; set;} 
+        private int MaxHint { get; set; }
 
         public SodukuGameMoveMode MoveMode { get; set; } = SodukuGameMoveMode.Manual;
 
@@ -388,5 +389,26 @@ namespace BlazorWasmGamesProj.Code
     {
         Manual,
         Automatic,
+    }
+
+    public class CellIdValueField
+    {
+        public CellIdValueField(int size)
+        {
+            _inputVal = new string[size];
+        }
+
+        public void Init(int size, int range)
+        {
+            _inputVal = new string[size];
+        }
+
+        private string[] _inputVal = [];
+
+        public string this[int index]
+        {
+            get => _inputVal[index];
+            set => _inputVal[index] = Convert.ToInt32(value) < 10 ? "10" : Convert.ToInt32(value) > 500 ? "500" : value;
+        }
     }
 }
