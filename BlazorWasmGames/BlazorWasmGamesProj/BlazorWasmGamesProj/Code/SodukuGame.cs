@@ -439,7 +439,7 @@ namespace BlazorWasmGamesProj.Code
                     else if (retVal < 1)
                         retVal = 0;
                 }
-                return retVal.ToString(CultureInfo.InvariantCulture);
+                return retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
             }
             set
             {
@@ -468,7 +468,7 @@ namespace BlazorWasmGamesProj.Code
                         retVal = 0;
                 }
 
-                _inputVal[index] = retVal.ToString(CultureInfo.InvariantCulture);
+                _inputVal[index] = retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
             }
         }
     }
