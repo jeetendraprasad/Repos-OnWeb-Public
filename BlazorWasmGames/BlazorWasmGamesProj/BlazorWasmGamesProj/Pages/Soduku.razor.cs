@@ -116,6 +116,8 @@ namespace BlazorWasmGamesProj.Pages
         {
             _sodukuGame.AddMove(cellId, args?.Value?.ToString() ?? "");
 
+            Console.WriteLine($"cellId = {cellId}"); 
+
             await Task.FromResult(0);
         }
 
