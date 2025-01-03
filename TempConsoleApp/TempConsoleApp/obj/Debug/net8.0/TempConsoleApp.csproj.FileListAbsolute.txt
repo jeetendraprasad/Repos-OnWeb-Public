@@ -1,0 +1,15 @@
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\bin\Debug\net8.0\TempConsoleApp.exe
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\bin\Debug\net8.0\TempConsoleApp.deps.json
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\bin\Debug\net8.0\TempConsoleApp.runtimeconfig.json
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\bin\Debug\net8.0\TempConsoleApp.dll
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\bin\Debug\net8.0\TempConsoleApp.pdb
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.AssemblyInfoInputs.cache
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.AssemblyInfo.cs
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.sourcelink.json
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.dll
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\refint\TempConsoleApp.dll
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.pdb
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\TempConsoleApp.genruntimeconfig.cache
+C:\Users\jeete\source\repos\OnWeb\Public\TempConsoleApp\TempConsoleApp\obj\Debug\net8.0\ref\TempConsoleApp.dll

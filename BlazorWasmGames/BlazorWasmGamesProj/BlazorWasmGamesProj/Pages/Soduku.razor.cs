@@ -11,18 +11,18 @@ namespace BlazorWasmGamesProj.Pages
         int rowsBlock = 2;
         int colsBlock = 2;
 
-        bool editMode = true;
+        //bool editMode = true;
 
         public Soduku()
         {
             _sodukuGame = new(rowsBlock, colsBlock);
-            _cellIdValueField = new(rowsBlock * colsBlock);
+            cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock);
         }
 
 
         SodukuGame _sodukuGame;
 
-        CellIdValueField _cellIdValueField;
+        CellIdValueField cellIdValueField;
 
 
 
@@ -38,7 +38,7 @@ namespace BlazorWasmGamesProj.Pages
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
 
-            _cellIdValueField.Init(rowsBlock * colsBlock, 0);
+            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock);
 
             _sodukuGame.Recalculate();
 
@@ -121,7 +121,7 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
-            _cellIdValueField.Init(rowsBlock * colsBlock, 0);
+            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
             _sodukuGame.Recalculate();
             return base.OnInitializedAsync();

@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@* @page "/" *@
 @page "/soduku"
 
 @using System.Diagnostics
@@ -29,7 +29,7 @@
     {
         var cellId = _sodukuGame.SuHoriFullFlattened[i];
         int k = i;
-        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId" @bind-="@_cellIdValueField[k]" @bind:after="TO_DO">
+        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId" @bind="cellIdValueField[k]">
             @cellId
             <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" @onchange="@(async (args) => await AddMove(args, @cellId))" min="0" max="@(rowsBlock * colsBlock)" step="1" />
             <br />
@@ -43,7 +43,7 @@
 
 <br>
 <button @onclick="( async () => await Debug1())" style="display: none;">Debug1</button>
-<button @onclick="( async () => await Debug2())" >Debug2</button>
+<button @onclick="( async () => await Debug2())">Debug2</button>
 <br />
 
 

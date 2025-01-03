@@ -1,0 +1,60 @@
+﻿@page "/"
+@using System.Text.Json
+
+<h3>Test</h3>
+
+
+
+@for (int i = 0; i < books.Count; i++)
+{
+    int j = i;
+
+    <input type="number" id="@books[j].Id" @bind="@books[j].Qty"/>
+    <button @onclick="Submit"></button>
+}
+
+@code {
+
+    class Book
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "Name";
+        private int _qty = 0;
+        public int Qty
+        {
+            get
+            {
+                return _qty > 0 ? 2 : _qty;
+            }
+            set
+            {
+                if (value > 0)
+                    _qty = 2;
+                else
+                    _qty = value;
+            }
+            //            get;
+            //            set;
+        }
+    }
+
+    List<Book> books = new();
+
+    void Submit()
+    {
+        Console.WriteLine(JsonSerializer.Serialize(books));
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        books = new()
+        {
+            new Book() { Name = "HP", Qty = 2, Id = "1", },
+            new Book() { Name = "BEK", Qty = 200, Id = "2", },
+            new Book() { Name = "LOTR", Qty = 30, Id = "3", },
+        };
+
+        return base.OnInitializedAsync();
+    }
+
+}
