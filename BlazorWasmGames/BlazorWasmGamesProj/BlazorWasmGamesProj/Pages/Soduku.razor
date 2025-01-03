@@ -31,7 +31,7 @@
         int k = i;
         <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
             @cellId
-            <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock)" step="1" value="@cellIdValueField[k]" @onchange="@((args) => AddMove(args, @cellId))" />
+            <input type="text" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock)" step="1" value="@cellIdValueField[k]" @onchange="@((args) => AddMove(args, @cellId, k))" />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {

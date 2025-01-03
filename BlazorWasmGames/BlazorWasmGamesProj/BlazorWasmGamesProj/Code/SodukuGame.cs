@@ -418,7 +418,7 @@ namespace BlazorWasmGamesProj.Code
             {
                 int retVal;
 
-                Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
+                //Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
 
                 if (index < 0 || index >= size)
                 {
@@ -446,7 +446,7 @@ namespace BlazorWasmGamesProj.Code
 
                 int retVal = 0;
 
-                Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
+                //Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
 
                 if (index < 0 || index >= size)
                 {

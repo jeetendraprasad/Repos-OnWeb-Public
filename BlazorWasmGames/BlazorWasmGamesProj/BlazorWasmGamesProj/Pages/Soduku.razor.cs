@@ -112,11 +112,13 @@ namespace BlazorWasmGamesProj.Pages
             //await Task.Delay(1);
         }
 
-        async Task AddMove(ChangeEventArgs args, string cellId)
+        async Task AddMove(ChangeEventArgs args, string cellId, int index)
         {
-            _sodukuGame.AddMove(cellId, args?.Value?.ToString() ?? "");
+            cellIdValueField[index] = args?.Value?.ToString() ?? "";
 
-            Console.WriteLine($"cellId = {cellId}"); 
+            _sodukuGame.AddMove(cellId, cellIdValueField[index]);
+
+            Console.WriteLine($"cellId = {cellId} and index = {index}"); 
 
             await Task.FromResult(0);
         }
