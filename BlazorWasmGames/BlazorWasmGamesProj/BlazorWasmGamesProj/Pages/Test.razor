@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using System.Text.Json
+@using BlazorWasmGamesProj.Code
 
 <h3>Test</h3>
 
@@ -13,7 +14,16 @@
     <button @onclick="Submit"></button>
 }
 
+@for (int i = 0; i < cellIdValueField.Size; i++)
+{
+    int j = i;
+
+    <input type="text" @bind="@cellIdValueField[j]" />
+    <button @onclick="Submit"></button>
+}
+
 @code {
+    CellIdValueField cellIdValueField = new (4);
 
     class Book
     {
