@@ -31,7 +31,7 @@
         int k = i;
         <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
             @cellId
-            <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1" @bind="@cellIdValueField[k]" />
+            <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1" @bind="@_cellIdValueField[k]" />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {
@@ -51,7 +51,7 @@
 
     async Task Test(string arg)
     {
-        cellIdValueField[1] = arg; 
+        _cellIdValueField[1] = arg; 
         await Task.FromResult(0);
     }
 

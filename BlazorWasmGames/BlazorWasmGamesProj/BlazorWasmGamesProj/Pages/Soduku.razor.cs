@@ -16,14 +16,14 @@ namespace BlazorWasmGamesProj.Pages
         public Soduku()
         {
             _sodukuGame = new(rowsBlock, colsBlock);
-            cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock,
+            _cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
         }
 
 
         SodukuGame _sodukuGame;
 
-        CellIdValueField cellIdValueField;
+        CellIdValueField _cellIdValueField;
 
 
 
@@ -39,7 +39,7 @@ namespace BlazorWasmGamesProj.Pages
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
 
-            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
+            _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
 
             _sodukuGame.Recalculate();
@@ -116,9 +116,9 @@ namespace BlazorWasmGamesProj.Pages
 
         async Task AddMove(ChangeEventArgs args, string cellId, int index)
         {
-            cellIdValueField[index] = args?.Value?.ToString() ?? "";
+            _cellIdValueField[index] = args?.Value?.ToString() ?? "";
 
-            _sodukuGame.AddMove(cellId, cellIdValueField[index]);
+            _sodukuGame.AddMove(cellId, _cellIdValueField[index]);
 
             Console.WriteLine($"cellId = {cellId} and index = {index}"); 
 
@@ -127,7 +127,7 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
-            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
+            _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
             _sodukuGame.Recalculate();
