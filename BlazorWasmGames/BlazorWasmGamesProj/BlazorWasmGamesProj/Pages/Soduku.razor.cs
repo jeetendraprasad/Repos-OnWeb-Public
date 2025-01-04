@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Timers;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BlazorWasmGamesProj.Pages
 {
@@ -16,15 +18,14 @@ namespace BlazorWasmGamesProj.Pages
         public Soduku()
         {
             _sodukuGame = new(rowsBlock, colsBlock);
-            _cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock,
-                rowsBlock * colsBlock);
+            //_cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock, rowsBlock * colsBlock);
             //_sodukuGame._positions = [];
         }
 
 
         SodukuGame _sodukuGame;
 
-        CellIdValueField _cellIdValueField;
+        //CellIdValueField _cellIdValueField;
 
 
 
@@ -40,8 +41,7 @@ namespace BlazorWasmGamesProj.Pages
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
 
-            _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
-                rowsBlock * colsBlock);
+            //_cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock, rowsBlock * colsBlock);
             //_sodukuGame._positions = [];
 
             _sodukuGame.Recalculate();
@@ -105,6 +105,10 @@ namespace BlazorWasmGamesProj.Pages
 
         async Task Debug2()
         {
+            Console.WriteLine(JsonSerializer.Serialize(_sodukuGame?.Positions ?? []));
+
+            string key = _sodukuGame?.Positions?.Keys?.FirstOrDefault() ?? "";
+            Console.WriteLine(_sodukuGame?.Positions?[key] ?? new());
             //foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
             //{
             //    Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
@@ -114,6 +118,25 @@ namespace BlazorWasmGamesProj.Pages
 
             await Task.FromResult(0);
             //await Task.Delay(1);
+        }
+
+        async Task UpdatePosition(ChangeEventArgs e, string cellId, string myValue, KeyValuePair<string, SodukuCellInfo> item)
+        {
+            string varupdatedValue = e?.Value?.ToString() ?? "";
+
+            _sodukuGame.Positions[cellId].CellValue.Val = varupdatedValue;
+
+            if (varupdatedValue.Length < 2)
+            {
+                    item.Value.CellValue.Val = varupdatedValue;
+            }
+            else
+            {
+                string tempValue = item.Value.CellValue.Val;
+                item.Value.CellValue.Val = "";
+                await Task.Yield();
+                item.Value.CellValue.Val = tempValue;
+            }
         }
 
         //async Task AddMove(ChangeEventArgs args, string cellId, int index)
@@ -129,8 +152,7 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
-            _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
-                rowsBlock * colsBlock);
+            //_cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock, rowsBlock * colsBlock);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
             //_sodukuGame._positions = [];
             _sodukuGame.Recalculate();

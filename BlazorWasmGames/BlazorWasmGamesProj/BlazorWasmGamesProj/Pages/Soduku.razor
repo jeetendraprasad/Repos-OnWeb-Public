@@ -25,13 +25,17 @@
 <br />
 
 <div style="@GetSodukuStyle()">
-    @for (int i = 0; i < _sodukuGame.SuHoriFullFlattened.Count; i++)
+    @foreach (var item in _sodukuGame.Positions)
     {
-        var cellId = _sodukuGame.SuHoriFullFlattened[i];
-        int k = i;
+        var cellId = item.Key;
+        var myValue = item.Value.CellValue.Val;
+        ;
         <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
             @cellId
-            <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1" @bind="@_cellIdValueField[k]" />
+            <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1"
+                value="@myValue"
+                   @onchange="@(e => item.Value.CellValue.Val = (e?.Value?.ToString() ?? ""))"
+                   />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {
@@ -51,7 +55,7 @@
 
     async Task Test(string arg)
     {
-        _cellIdValueField[1] = arg; 
+        //_cellIdValueField[1] = arg; 
         await Task.FromResult(0);
     }
 

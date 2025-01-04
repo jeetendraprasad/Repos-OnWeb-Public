@@ -41,7 +41,7 @@ namespace BlazorWasmGamesProj.Code
             _suHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
-            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, Value = 0, PositionType = PositionTypeEnum.None }))
+            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, CellValue = new(rowsBlock * colsBlock), PositionType = PositionTypeEnum.None }))
                 .ToDictionary(t => t.Key, t => t.Value);
 
             GameState = SodukuGameState.CalculationPending;
@@ -53,7 +53,7 @@ namespace BlazorWasmGamesProj.Code
             _suHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
-            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, Value = 0, PositionType = PositionTypeEnum.None }))
+            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, CellValue = new(_rowsBlock * _colsBlock), PositionType = PositionTypeEnum.None }))
                 .ToDictionary(t => t.Key, t => t.Value);
 
 
@@ -247,6 +247,70 @@ namespace BlazorWasmGamesProj.Code
         SolvingDone = 3,
     }
 
+    internal class CellIdValueField1
+    {
+        int _maxValue;
+        string _value;
+
+        public CellIdValueField1(int maxValue)
+        {
+            _maxValue = maxValue;
+            _value = "";
+        }
+
+        public string Val
+        {
+            get
+            {
+                int retVal;
+
+                //Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
+
+                if (string.IsNullOrEmpty(_value))
+                {
+                    return "";
+                }
+                else if (int.TryParse(_value, out retVal) == false)
+                {
+                    return "";
+                }
+                else
+                {
+                    if (retVal > _maxValue)
+                        retVal = _maxValue;
+                    else if (retVal < 1)
+                        retVal = 0;
+                }
+                return retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
+            }
+            set
+            {
+
+                int retVal = 0;
+
+                //Console.WriteLine($"Index = {index} and _inputVal Size = {_inputVal.Length}");
+
+                if (string.IsNullOrEmpty(value))
+                {
+                    _value = "";
+                }
+                else if (int.TryParse(value, out retVal) == false)
+                {
+                    _value = "";
+                }
+                else
+                {
+                    if (retVal > _maxValue)
+                        retVal = _maxValue;
+                    else if (retVal < 1)
+                        retVal = 0;
+                }
+
+                _value = retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+    }
+
 
 
     internal class CellIdValueField(int size, int maxValue)
@@ -339,9 +403,11 @@ namespace BlazorWasmGamesProj.Code
     internal class SodukuCellInfo
     {
         public string CellId { get; set; } = "";
-        public int Value { get; set; } = 0;
+        //public string CellValue { get; set; } = "";
 
         public PositionTypeEnum PositionType { get; set; } = PositionTypeEnum.Manual;
+
+        public CellIdValueField1 CellValue { get; init; } = new(0);
     }
 
     internal enum PositionTypeEnum
