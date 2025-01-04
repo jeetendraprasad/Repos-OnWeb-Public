@@ -276,12 +276,21 @@ namespace BlazorWasmGamesProj.Code
                 }
                 else
                 {
-                    if (retVal > _maxValue)
-                        retVal = _maxValue;
-                    else if (retVal < 1)
+                    if (retVal < 1)
                         retVal = 0;
+                    else if (retVal > _maxValue)
+                        retVal = _maxValue;
                 }
-                return retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
+
+                string result = "";
+
+                if (retVal != 0)
+                    result = retVal.ToString(CultureInfo.InvariantCulture);
+                else
+                    result = "";
+
+                Console.WriteLine($"GET result = {result}");
+                return result;
             }
             set
             {
@@ -300,13 +309,25 @@ namespace BlazorWasmGamesProj.Code
                 }
                 else
                 {
-                    if (retVal > _maxValue)
-                        retVal = _maxValue;
-                    else if (retVal < 1)
-                        retVal = 0;
-                }
+                    //if (retVal > _maxValue)
+                    //    retVal = _maxValue;
+                    //else if (retVal < 1)
+                    //    retVal = 0;
 
-                _value = retVal == 0 ? "" : retVal.ToString(CultureInfo.InvariantCulture);
+                    if (retVal < 1)
+                        retVal = 0;
+                    else if (retVal > _maxValue)
+                        retVal = _maxValue;
+                }
+                string result = "";
+
+                if (retVal != 0)
+                    result = retVal.ToString(CultureInfo.InvariantCulture);
+                else result = "";
+
+                _value = result;
+
+                Console.WriteLine($"SET result = {result}");
             }
         }
     }

@@ -27,19 +27,16 @@
 <div style="@GetSodukuStyle()">
     @foreach (var item in _sodukuGame.Positions)
     {
-        var cellId = item.Key;
-        var myValue = item.Value.CellValue.Val;
-        ;
-        <div class="@(cellId==highlightCell ? "highlight" : "")" style="@GetCellStyle(cellId==highlightCell ? null : cellId)" id="@cellId">
-            @cellId
-            <input type="number" style="overflow : hidden; width : 100%;" id="@(cellId+":L")" min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1"
-                value="@myValue"
+        <div class="@(item.Key==highlightCell ? "highlight" : "")" style="@GetCellStyle(item.Key==highlightCell ? null : item.Key)" id="@item.Key">
+            @item.Key
+            <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1"
+                   value="@item.Value.CellValue.Val"
                    @onchange="@(e => item.Value.CellValue.Val = (e?.Value?.ToString() ?? ""))"
                    />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {
-                <button style="font-size: 0.5em;" id="@(cellId+":H"+(m+1).ToString())">@(m + 1)</button>
+                <button style="font-size: 0.5em;" id="@(item.Key+":H"+(m+1).ToString())">@(m + 1)</button>
             }
         </div>
     }
