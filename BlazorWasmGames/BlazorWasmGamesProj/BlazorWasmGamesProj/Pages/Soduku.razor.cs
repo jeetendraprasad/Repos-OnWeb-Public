@@ -16,7 +16,8 @@ namespace BlazorWasmGamesProj.Pages
         public Soduku()
         {
             _sodukuGame = new(rowsBlock, colsBlock);
-            cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock);
+            cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock,
+                rowsBlock * colsBlock);
         }
 
 
@@ -38,7 +39,8 @@ namespace BlazorWasmGamesProj.Pages
 
             _sodukuGame.ReInit(rowsBlock, colsBlock);
 
-            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock);
+            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
+                rowsBlock * colsBlock);
 
             _sodukuGame.Recalculate();
 
@@ -125,7 +127,8 @@ namespace BlazorWasmGamesProj.Pages
 
         protected override Task OnInitializedAsync()
         {
-            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock);
+            cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
+                rowsBlock * colsBlock);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
             _sodukuGame.Recalculate();
             return base.OnInitializedAsync();

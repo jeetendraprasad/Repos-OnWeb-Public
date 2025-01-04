@@ -393,14 +393,20 @@ namespace BlazorWasmGamesProj.Code
         Automatic,
     }
 
-    internal class CellIdValueField(int size)
+    internal class CellIdValueField(int size, int maxValue)
     {
         //int _size = size;
+        int MaxValue
+        {
+            get => maxValue;
+            set => value = maxValue;
+        }
 
         public int Size { get => _inputVal.Length; }
 
-        public void Init(int size)
+        public void Init(int size, int maxValue)
         {
+            MaxValue = maxValue;
             _inputVal = new string[size];
         }
 
@@ -434,8 +440,8 @@ namespace BlazorWasmGamesProj.Code
                 }
                 else
                 {
-                    if (retVal > 16)
-                        retVal = 16;
+                    if (retVal > maxValue)
+                        retVal = maxValue;
                     else if (retVal < 1)
                         retVal = 0;
                 }
@@ -462,8 +468,8 @@ namespace BlazorWasmGamesProj.Code
                 }
                 else
                 {
-                    if (retVal > 16)
-                        retVal = 16;
+                    if (retVal > maxValue)
+                        retVal = maxValue;
                     else if (retVal < 1)
                         retVal = 0;
                 }
