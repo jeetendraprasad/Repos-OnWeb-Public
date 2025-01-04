@@ -287,9 +287,9 @@ namespace BlazorWasmGamesProj.Code
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
                 else
-                    result = "";
+                    result = "0";
 
-                Console.WriteLine($"GET result = {result}");
+                Console.WriteLine($"GET result = {result} and _value = {_value}");
                 return result;
             }
             set
@@ -309,11 +309,6 @@ namespace BlazorWasmGamesProj.Code
                 }
                 else
                 {
-                    //if (retVal > _maxValue)
-                    //    retVal = _maxValue;
-                    //else if (retVal < 1)
-                    //    retVal = 0;
-
                     if (retVal < 1)
                         retVal = 0;
                     else if (retVal > _maxValue)
@@ -323,11 +318,11 @@ namespace BlazorWasmGamesProj.Code
 
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
-                else result = "";
+                else result = "0";
 
                 _value = result;
 
-                Console.WriteLine($"SET result = {result}");
+                Console.WriteLine($"SET result = {result} and value = {value}");
             }
         }
     }
