@@ -18,6 +18,7 @@ namespace BlazorWasmGamesProj.Pages
             _sodukuGame = new(rowsBlock, colsBlock);
             _cellIdValueField = new(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
+            //_sodukuGame._positions = [];
         }
 
 
@@ -41,6 +42,7 @@ namespace BlazorWasmGamesProj.Pages
 
             _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
+            //_sodukuGame._positions = [];
 
             _sodukuGame.Recalculate();
 
@@ -103,33 +105,34 @@ namespace BlazorWasmGamesProj.Pages
 
         async Task Debug2()
         {
-            foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
-            {
-                Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
-            }
+            //foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
+            //{
+            //    Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
+            //}
 
-            Console.WriteLine("Moves : " + string.Join(',', _sodukuGame.Moves));
+            //Console.WriteLine("Moves : " + string.Join(',', _sodukuGame.Moves));
 
             await Task.FromResult(0);
             //await Task.Delay(1);
         }
 
-        async Task AddMove(ChangeEventArgs args, string cellId, int index)
-        {
-            _cellIdValueField[index] = args?.Value?.ToString() ?? "";
+        //async Task AddMove(ChangeEventArgs args, string cellId, int index)
+        //{
+        //    _cellIdValueField[index] = args?.Value?.ToString() ?? "";
 
-            _sodukuGame.AddMove(cellId, _cellIdValueField[index]);
+        //    _sodukuGame.AddMove(cellId, _cellIdValueField[index]);
 
-            Console.WriteLine($"cellId = {cellId} and index = {index}"); 
+        //    Console.WriteLine($"cellId = {cellId} and index = {index}"); 
 
-            await Task.FromResult(0);
-        }
+        //    await Task.FromResult(0);
+        //}
 
         protected override Task OnInitializedAsync()
         {
             _cellIdValueField.Init(rowsBlock * colsBlock * rowsBlock * colsBlock,
                 rowsBlock * colsBlock);
             _sodukuGame.ReInit(rowsBlock, colsBlock);
+            //_sodukuGame._positions = [];
             _sodukuGame.Recalculate();
             return base.OnInitializedAsync();
         }
@@ -198,8 +201,14 @@ namespace BlazorWasmGamesProj.Pages
             timer.Dispose();
         }
 
+        void ResetPositions()
+        {
+
+        }
+
         async Task SaveNSolve()
         {
+            ResetPositions();
             _sodukuGame.SaveNSolve();
 
             await Task.FromResult(0);

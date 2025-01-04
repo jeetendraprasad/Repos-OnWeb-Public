@@ -1,10 +1,10 @@
 ﻿namespace BlazorWasmGamesProj.Code
 {
-    public class ExtensionMethods
+    internal class ExtensionMethods
     {
     }
 
-    public static class ListExtension
+    internal static class ListExtension
     {
         /// <summary>
         /// Creates a single flat list from a list of lists input. 
