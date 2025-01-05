@@ -30,8 +30,8 @@
         <div class="@(item.Key==highlightCell ? "highlight" : "")" style="@GetCellStyle(item.Key==highlightCell ? null : item.Key)" id="@item.Key">
             @item.Key
             <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
-                min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1"
-                value="@item.Value.CellValue.Val"
+                min="0" max="@(rowsBlock * colsBlock)" step="1"
+                value="@item.Value.CellValueVal"
                    @onchange="@(e => AddPosition(e, item))" />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)

@@ -41,7 +41,9 @@ namespace BlazorWasmGamesProj.Code
             _suHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
-            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, CellValue = new(rowsBlock * colsBlock), PositionType = PositionTypeEnum.None }))
+            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x,
+                new SodukuCellInfo (cellId: x, positionType: PositionTypeEnum.None, maxCellValue: _rowsBlock * _colsBlock, "") 
+            ))
                 .ToDictionary(t => t.Key, t => t.Value);
 
             GameState = SodukuGameState.CalculationPending;
@@ -55,7 +57,9 @@ namespace BlazorWasmGamesProj.Code
             _suHoriFullFlattened = SuHoriFull.Flatten();
             _suVertFullFlattened = SuVertFull.Flatten();
 
-            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x, new() { CellId = x, CellValue = new(_rowsBlock * _colsBlock), PositionType = PositionTypeEnum.None }))
+            Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x,
+                                new SodukuCellInfo(cellId: x, positionType: PositionTypeEnum.None, maxCellValue: _rowsBlock * _colsBlock, "")
+                ))
                 .ToDictionary(t => t.Key, t => t.Value);
 
 
@@ -398,12 +402,42 @@ namespace BlazorWasmGamesProj.Code
 
     internal class SodukuCellInfo
     {
-        public string CellId { get; set; } = "";
-        //public string CellValue { get; set; } = "";
+        public SodukuCellInfo(string cellId, PositionTypeEnum positionType, int maxCellValue, string cellValue)
+        {
+            _cellId = cellId;
+            _positionType = positionType;
+            _cellValueField1 = new(maxCellValue)
+            {
+                Val = cellValue
+            };
+        }
 
-        public PositionTypeEnum PositionType { get; set; } = PositionTypeEnum.Manual;
+        string _cellId = "";
 
-        public CellIdValueField1 CellValue { get; init; } = new(0);
+        PositionTypeEnum _positionType;
+
+        CellIdValueField1 _cellValueField1;
+
+        public string CellValueVal
+        {
+            get { return _cellValueField1.Val; }
+            set { _cellValueField1.Val = value; }
+        }
+
+        readonly List<int> _hints = [];
+
+        public  List<int>  Hints
+        {
+            get
+            {
+                return _hints;
+            }
+        }
+
+        public void RemoveHint(int num)
+        {
+            _hints.Remove(num);
+        }
     }
 
     internal enum PositionTypeEnum

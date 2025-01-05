@@ -61,7 +61,7 @@ namespace BlazorWasmGamesProj.Pages
         {
             string varupdatedValue = e.Value?.ToString() ?? "";
 
-            item.Value.CellValue.Val = varupdatedValue;
+            item.Value.CellValueVal = varupdatedValue;
 
             await Task.FromResult(0);
         }
@@ -111,7 +111,7 @@ namespace BlazorWasmGamesProj.Pages
             Console.WriteLine(JsonSerializer.Serialize(_sodukuGame?.Positions ?? []));
 
             string key = _sodukuGame?.Positions?.Keys?.FirstOrDefault() ?? "";
-            Console.WriteLine(_sodukuGame?.Positions?[key] ?? new());
+            Console.WriteLine(_sodukuGame?.Positions?[key]);
             //foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
             //{
             //    Console.WriteLine("{0} and {1}", elem.Key, elem.Value);
@@ -193,14 +193,8 @@ namespace BlazorWasmGamesProj.Pages
             );
         }
 
-        static void ResetPositions()
-        {
-
-        }
-
         async Task SaveNSolve()
         {
-            ResetPositions();
             _sodukuGame.SaveNSolve();
 
             await Task.FromResult(0);
