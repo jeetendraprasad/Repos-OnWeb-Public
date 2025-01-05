@@ -57,6 +57,16 @@ namespace BlazorWasmGamesProj.Pages
         string highlightCell = "";
 
 
+        async Task AddPosition(ChangeEventArgs e, KeyValuePair<string, SodukuCellInfo> item)
+        {
+            string varupdatedValue = e.Value?.ToString() ?? "";
+
+            item.Value.CellValue.Val = varupdatedValue;
+
+            await Task.FromResult(0);
+        }
+
+
         string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
         string GetCellStyle(string? cellId = null)
         {
@@ -112,36 +122,6 @@ namespace BlazorWasmGamesProj.Pages
             await Task.FromResult(0);
             //await Task.Delay(1);
         }
-
-        async Task UpdatePosition(ChangeEventArgs e, string cellId, string myValue, KeyValuePair<string, SodukuCellInfo> item)
-        {
-            string varupdatedValue = e?.Value?.ToString() ?? "";
-
-            _sodukuGame.Positions[cellId].CellValue.Val = varupdatedValue;
-
-            if (varupdatedValue.Length < 2)
-            {
-                    item.Value.CellValue.Val = varupdatedValue;
-            }
-            else
-            {
-                string tempValue = item.Value.CellValue.Val;
-                item.Value.CellValue.Val = "";
-                await Task.Yield();
-                item.Value.CellValue.Val = tempValue;
-            }
-        }
-
-        //async Task AddMove(ChangeEventArgs args, string cellId, int index)
-        //{
-        //    _cellIdValueField[index] = args?.Value?.ToString() ?? "";
-
-        //    _sodukuGame.AddMove(cellId, _cellIdValueField[index]);
-
-        //    Console.WriteLine($"cellId = {cellId} and index = {index}"); 
-
-        //    await Task.FromResult(0);
-        //}
 
         protected override Task OnInitializedAsync()
         {
