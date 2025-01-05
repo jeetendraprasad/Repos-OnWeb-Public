@@ -63,6 +63,8 @@ namespace BlazorWasmGamesProj.Pages
 
             item.Value.CellValueVal = varupdatedValue;
 
+            item.Value.SetPositionType(PositionTypeEnum.Manual);
+
             await Task.FromResult(0);
         }
 
@@ -110,8 +112,6 @@ namespace BlazorWasmGamesProj.Pages
         {
             Console.WriteLine(JsonSerializer.Serialize(_sodukuGame?.Positions ?? []));
 
-            string key = _sodukuGame?.Positions?.Keys?.FirstOrDefault() ?? "";
-            Console.WriteLine(_sodukuGame?.Positions?[key]);
             //foreach (KeyValuePair<string, string> elem in _sodukuGame.Positions)
             //{
             //    Console.WriteLine("{0} and {1}", elem.Key, elem.Value);

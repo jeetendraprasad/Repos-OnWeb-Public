@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Extensions.Primitives;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -42,7 +43,7 @@ namespace BlazorWasmGamesProj.Code
             _suVertFullFlattened = SuVertFull.Flatten();
 
             Positions = _suHoriFullFlattened.Select(x => new KeyValuePair<string, SodukuCellInfo>(x,
-                new SodukuCellInfo (cellId: x, positionType: PositionTypeEnum.None, maxCellValue: _rowsBlock * _colsBlock, "") 
+                new SodukuCellInfo(cellId: x, positionType: PositionTypeEnum.None, maxCellValue: _rowsBlock * _colsBlock, "")
             ))
                 .ToDictionary(t => t.Key, t => t.Value);
 
@@ -79,7 +80,7 @@ namespace BlazorWasmGamesProj.Code
 
                 for (int j = 0; j < su.Count; j++)
                 {
-
+                    List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
                 }
             }
         }
@@ -256,9 +257,9 @@ namespace BlazorWasmGamesProj.Code
     internal class CellIdValueField1(int maxValue)
     {
         readonly int _maxValue = maxValue;
-        string _value = "";
+        string? _value = "";
 
-        public string Val
+        public string? Val
         {
             get
             {
@@ -282,13 +283,13 @@ namespace BlazorWasmGamesProj.Code
                         retVal = _maxValue;
                 }
 
-                string result;
+                string? result;
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
                 else
-                    result = "0";
+                    result = null;
 
-                Console.WriteLine($"GET result = {result} and _value = {_value}");
+                Console.WriteLine($"GET result = {(result == null ? "null" : result)} and _value = {_value}");
                 return result;
             }
             set
@@ -313,15 +314,16 @@ namespace BlazorWasmGamesProj.Code
                     else if (retVal > _maxValue)
                         retVal = _maxValue;
                 }
-                string result;
+                string? result;
 
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
-                else result = "0";
+                else
+                    result = null;
 
                 _value = result;
 
-                Console.WriteLine($"SET result = {result} and value = {value}");
+                Console.WriteLine($"SET result = {(result == null ? "null" : result)} and value = {value}");
             }
         }
     }
@@ -410,15 +412,22 @@ namespace BlazorWasmGamesProj.Code
             {
                 Val = cellValue
             };
+
+            _hints = Enumerable.Range(1, maxCellValue).ToList();
         }
 
         string _cellId = "";
 
         PositionTypeEnum _positionType;
 
+        public void SetPositionType(PositionTypeEnum positionType)
+        {
+            _positionType = positionType;
+        }
+
         CellIdValueField1 _cellValueField1;
 
-        public string CellValueVal
+        public string? CellValueVal
         {
             get { return _cellValueField1.Val; }
             set { _cellValueField1.Val = value; }
@@ -426,11 +435,21 @@ namespace BlazorWasmGamesProj.Code
 
         readonly List<int> _hints = [];
 
-        public  List<int>  Hints
+        public List<int> Hints
         {
             get
             {
-                return _hints;
+                int intVal = 0;
+                _ = int.TryParse(CellValueVal, out intVal);
+                Console.WriteLine($"CellValueVal = {(CellValueVal == null ? "null" : CellValueVal)}");
+
+                if (intVal > 0)
+                {
+                    Console.WriteLine($"CellValueVal {CellValueVal} converted to int is greater than 0");
+                    return [];
+                }
+                else
+                    return _hints;
             }
         }
 
