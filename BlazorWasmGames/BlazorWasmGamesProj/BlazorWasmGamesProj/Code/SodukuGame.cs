@@ -17,9 +17,9 @@ namespace BlazorWasmGamesProj.Code
         const string _blockIdPrefix = "B[{0},{1}]";                // block names are B[{0-based rows},{0-based cols}]
         const string _cellIdPrefix = "{0}:C[{1},{2}]";             // cell names are BLOCK_ID:[{0-based rows},{0-based cols}]
 
-        private List<string> _suBlockFullFlattened = new();
-        private List<string> _suHoriFullFlattened = new();
-        private List<string> _suVertFullFlattened = new();
+        private List<string> _suBlockFullFlattened = [];
+        private List<string> _suHoriFullFlattened = [];
+        private List<string> _suVertFullFlattened = [];
         //private static List<string> _hints = new();
         public Dictionary<string, SodukuCellInfo> Positions = [];
 
@@ -109,7 +109,7 @@ namespace BlazorWasmGamesProj.Code
         {
             get
             {
-                List<List<string>> retVal = new();
+                List<List<string>> retVal = [];
 
                 for (int i = 0; i < _rowsBlock; i++)
                     for (int j = 0; j < _colsBlock; j++)
@@ -124,7 +124,7 @@ namespace BlazorWasmGamesProj.Code
         // Get Solving Unit - for a block
         List<string> GetSuBlock(int rowNoBlock, int colNoBlock)
         {
-            List<string> retVal = new List<string>();
+            List<string> retVal = [];
 
             string blockId = string.Format(_blockIdPrefix, rowNoBlock, colNoBlock);
 
@@ -155,7 +155,7 @@ namespace BlazorWasmGamesProj.Code
         {
             get
             {
-                List<List<string>> retVal = new();
+                List<List<string>> retVal = [];
 
                 for (int i = 0; i < _rowsBlock * _colsBlock; i++)
                 {
@@ -172,7 +172,7 @@ namespace BlazorWasmGamesProj.Code
         // Get Solving Unit - Horigontal list
         List<string> GetSuHori(int rowNoSoduku)
         {
-            List<string> retVal = new List<string>();
+            List<string> retVal = [];
 
             int p = (int)(rowNoSoduku / _colsBlock);
             int r = (int)(rowNoSoduku % _colsBlock);
@@ -205,7 +205,7 @@ namespace BlazorWasmGamesProj.Code
         {
             get
             {
-                List<List<string>> retVal = new();
+                List<List<string>> retVal = [];
 
                 for (int i = 0; i < _rowsBlock * _colsBlock; i++)
                 {
@@ -222,7 +222,7 @@ namespace BlazorWasmGamesProj.Code
         // Get Solving Unit - Vertical list
         List<string> GetSuVert(int colNoSoduku)
         {
-            List<string> retVal = new List<string>();
+            List<string> retVal = [];
 
             int q = (int)(colNoSoduku / _rowsBlock);
             int s = (colNoSoduku % _rowsBlock);
@@ -249,16 +249,10 @@ namespace BlazorWasmGamesProj.Code
         SolvingDone = 3,
     }
 
-    internal class CellIdValueField1
+    internal class CellIdValueField1(int maxValue)
     {
-        int _maxValue;
-        string _value;
-
-        public CellIdValueField1(int maxValue)
-        {
-            _maxValue = maxValue;
-            _value = "";
-        }
+        readonly int _maxValue = maxValue;
+        string _value = "";
 
         public string Val
         {
@@ -284,8 +278,7 @@ namespace BlazorWasmGamesProj.Code
                         retVal = _maxValue;
                 }
 
-                string result = "";
-
+                string result;
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
                 else
@@ -316,7 +309,7 @@ namespace BlazorWasmGamesProj.Code
                     else if (retVal > _maxValue)
                         retVal = _maxValue;
                 }
-                string result = "";
+                string result;
 
                 if (retVal != 0)
                     result = retVal.ToString(CultureInfo.InvariantCulture);
@@ -333,22 +326,7 @@ namespace BlazorWasmGamesProj.Code
 
     internal class CellIdValueField(int size, int maxValue)
     {
-        //int _size = size;
-        int MaxValue
-        {
-            get => maxValue;
-            set => value = maxValue;
-        }
-
-        public int Size { get => _inputVal.Length; }
-
-        public void Init(int size, int maxValue)
-        {
-            MaxValue = maxValue;
-            _inputVal = new string[size];
-        }
-
-        private string[] _inputVal = new string[size];
+        private readonly string[] _inputVal = new string[size];
 
         //public string this[int index]
         //{

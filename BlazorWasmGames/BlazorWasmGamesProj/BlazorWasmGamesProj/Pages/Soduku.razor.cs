@@ -1,6 +1,7 @@
 ﻿using BlazorWasmGamesProj.Code;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Timers;
@@ -8,7 +9,7 @@ using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BlazorWasmGamesProj.Pages
 {
-    public partial class Soduku
+    public partial class Soduku : IDisposable
     {
         int rowsBlock = 2;
         int colsBlock = 2;
@@ -23,13 +24,13 @@ namespace BlazorWasmGamesProj.Pages
         }
 
 
-        SodukuGame _sodukuGame;
+        readonly SodukuGame _sodukuGame;
 
         //CellIdValueField _cellIdValueField;
 
 
 
-        int sodukuSizeInPx = 900;
+        readonly int sodukuSizeInPx = 900;
 
         private async Task ValidateAndSodukuResize()
         {
@@ -49,7 +50,7 @@ namespace BlazorWasmGamesProj.Pages
             await Task.FromResult(0);
         }
 
-        System.Timers.Timer timer = new System.Timers.Timer();
+        System.Timers.Timer? timer = new();
 
         bool debuggingOn = false;
         int index = 0;
@@ -57,18 +58,13 @@ namespace BlazorWasmGamesProj.Pages
 
 
         string GetSodukuStyle() => $"width: {sodukuSizeInPx}px;height: {sodukuSizeInPx}px;";
-        string GetBlockRowStyle() => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;";
-        string GetBlockStyle(int colorIndex) => $"width: {sodukuSizeInPx / colsBlock}px;height: {sodukuSizeInPx / rowsBlock}px;float:left;background-color:red;";
-        //string GetBlockId(int x, int y) => string.Format(blockIdPrefix, x, y);
-        //string GetCellId(string blockId, int x, int y) => string.Format(cellIdPrefix, blockId, x, y);
         string GetCellStyle(string? cellId = null)
         {
             string style = $"width: {sodukuSizeInPx / rowsBlock / colsBlock}px;height: {sodukuSizeInPx / rowsBlock / colsBlock}px;float:left;border: solid;"; // display:flex; flex-direction: column;font-size: 2em;
 
             if (cellId != null)
             {
-                int x, y;
-                GetBlockRowAndBlockColFromCellId(cellId, out x, out y);
+                GetBlockRowAndBlockColFromCellId(cellId, out int x, out int y);
                 string color = GetBlockColor(x, y);
                 style += $"background-color:{color};";
             }
@@ -76,21 +72,18 @@ namespace BlazorWasmGamesProj.Pages
             return style;
         }
 
-        void GetBlockRowAndBlockColFromCellId(string cellId, out int row, out int col)
+        private static void GetBlockRowAndBlockColFromCellId(string cellId, out int row, out int col)
         {
-            row = col = -1;
-
             // cellIdPrefix = "{0}:C[{1},{2}]"
             string[]? splitted = cellId.Split('[', ',', ']');
-
-            int.TryParse(splitted[1], out row);
-            int.TryParse(splitted[2], out col);
+            _ = int.TryParse(splitted[1], out row);
+            _ = int.TryParse(splitted[2], out col);
         }
 
         string GetBlockColor(int row, int col)
         {
             int ind = rowsBlock * row + col;
-            List<string> basicHtmlColors = new List<string>() { "silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black", };
+            List<string> basicHtmlColors = ["silver", "gray", "red", "yellow", "lime", "aqua", "teal", "olive", "fuchsia", "purple", "green", "maroon", "blue", "navy", "white", "black",];
             return basicHtmlColors[ind % basicHtmlColors.Count];
         }
 
@@ -161,10 +154,12 @@ namespace BlazorWasmGamesProj.Pages
 
         void InitTimer()
         {
-            if (!timer.Enabled)
+            if (timer != null && !timer.Enabled)
             {
-                timer = new System.Timers.Timer();
-                timer.Interval = 500;
+                timer = new System.Timers.Timer
+                {
+                    Interval = 500
+                };
                 timer.Elapsed += OnTimerElapsed;
                 timer.Enabled = true;
             }
@@ -172,7 +167,7 @@ namespace BlazorWasmGamesProj.Pages
 
         void DeInitTimer()
         {
-            if (timer.Enabled)
+            if (timer != null && timer.Enabled)
             {
                 timer.Stop();
                 timer.Elapsed -= OnTimerElapsed;
@@ -218,12 +213,7 @@ namespace BlazorWasmGamesProj.Pages
             );
         }
 
-        public void Dispose()
-        {
-            timer.Dispose();
-        }
-
-        void ResetPositions()
+        static void ResetPositions()
         {
 
         }
@@ -234,6 +224,26 @@ namespace BlazorWasmGamesProj.Pages
             _sodukuGame.SaveNSolve();
 
             await Task.FromResult(0);
+        }
+
+        public void Dispose()
+        {
+            timer?.Dispose();
+
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (timer != null)
+                {
+                    timer.Dispose();
+                    timer = null;
+                }
+            }
         }
     }
 }

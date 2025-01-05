@@ -14,7 +14,7 @@
         /// <returns>A single flatten list from a list of lists input</returns>
         public static List<T> Flatten<T>(this List<List<T>> inListOfLists)
         {
-            List<T> outList = new List<T>();
+            List<T> outList = [];
             foreach (List<T> list in inListOfLists)
             {
                 outList.AddRange(list);
