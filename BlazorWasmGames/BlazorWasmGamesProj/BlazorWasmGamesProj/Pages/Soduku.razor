@@ -33,7 +33,7 @@
             <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
                 min="0" max="@(rowsBlock * colsBlock * rowsBlock * colsBlock)" step="1"
                 value="@item.Value.CellValue.Val"
-                @onchange="@(e => {item.Value.CellValue.Val = (e?.Value?.ToString() ?? ""); Console.WriteLine(JsonSerializer.Serialize(item));})" />
+                   @onchange="@(e => Test(e, item))" />
             <br />
             @for (int m = 0; m < rowsBlock * colsBlock; m++)
             {
@@ -51,10 +51,23 @@
 
 @code {
 
-    async Task Test(string arg)
+    async Task Test(ChangeEventArgs e, KeyValuePair<string, SodukuCellInfo> item)
     {
-        //_cellIdValueField[1] = arg; 
-        await Task.FromResult(0);
+        string varupdatedValue = e.Value?.ToString() ?? "";
+
+        item.Value.CellValue.Val = varupdatedValue;
+
+        // if (varupdatedValue.Length < 2)
+        // {
+        //     item.Value.CellValue.Val = varupdatedValue;
+        // }
+        // else
+        {
+            string tempValue = item.Value.CellValue.Val;
+            item.Value.CellValue.Val = "";
+            await Task.Yield();
+            item.Value.CellValue.Val = tempValue;
+        }
     }
 
 }

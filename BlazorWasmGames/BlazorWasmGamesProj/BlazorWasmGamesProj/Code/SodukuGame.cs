@@ -45,6 +45,8 @@ namespace BlazorWasmGamesProj.Code
                 .ToDictionary(t => t.Key, t => t.Value);
 
             GameState = SodukuGameState.CalculationPending;
+
+            //KeyValuePair<string, SodukuCellInfo> a = Positions.First();
         }
 
         public void Recalculate()
