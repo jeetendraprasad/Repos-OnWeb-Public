@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Text.Json;
 
 namespace BlazorWasmGamesProj.Code
 {
@@ -69,7 +70,34 @@ namespace BlazorWasmGamesProj.Code
 
         void Solve()
         {
+            //int anySolvedPosition = Positions.Where(item => item.Value.CellValueValAsInt > 0).ToList().Count;
+            int automaticSolvedPosition_AtStart = Positions.Where(item => item.Value.CellValueValAsInt > 0 && item.Value.GetPositionType() == PositionTypeEnum.Solve).ToList().Count;
+
             CheckHori();
+            //CheckVert();
+            //CheckBlock();
+
+            //Dictionary<string, int> dict = new Dictionary<string, int>();
+            //dict = dict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value + 1);
+
+            //mydict.Keys.ToList().ForEach(k => mydict[k] = false);
+
+            foreach (string key in Positions.Keys.ToList())
+            {
+                SodukuCellInfo cellInfo = Positions[key];
+
+                if (cellInfo.Hints.Count == 1 && cellInfo.CellValueValAsInt > 0)
+                {
+                    cellInfo.CellValueVal = cellInfo.Hints[0].ToString(CultureInfo.InvariantCulture);
+                    cellInfo.SetPositionType(PositionTypeEnum.Solve);
+                }
+            }
+
+            int manualSolvedPosition_AtEnd = Positions.Where(item => item.Value.CellValueValAsInt > 0 && item.Value.GetPositionType() == PositionTypeEnum.Manual).ToList().Count;
+
+            if (automaticSolvedPosition_AtStart - manualSolvedPosition_AtEnd > 0)
+                Console.WriteLine("We have dome some automatic solving.");
+
         }
 
         private void CheckHori()
@@ -78,10 +106,55 @@ namespace BlazorWasmGamesProj.Code
             {
                 List<string> su = SuHoriFullFlattened.Skip(i * _rowsBlock * _colsBlock).Take(_rowsBlock * _colsBlock).ToList();
 
-                for (int j = 0; j < su.Count; j++)
+                CheckInternal(su);
+            }
+        }
+
+        private void CheckVert()
+        {
+            for (int i = 0; i < SuVertFullFlattened.Count; i++)
+            {
+                List<string> su = SuVertFullFlattened.Skip(i * _rowsBlock * _colsBlock).Take(_rowsBlock * _colsBlock).ToList();
+
+                CheckInternal(su);
+            }
+        }
+
+        private void CheckBlock()
+        {
+            for (int i = 0; i < SuBlockFullFlattened.Count; i++)
+            {
+                List<string> su = SuBlockFullFlattened.Skip(i * _rowsBlock * _colsBlock).Take(_rowsBlock * _colsBlock).ToList();
+
+                CheckInternal(su);
+            }
+        }
+
+        private void CheckInternal(List<string> su)
+        {
+
+            Console.WriteLine($"Solving for unit \r\n {JsonSerializer.Serialize(su ?? [])}");
+
+            for (int j = 0; j < su.Count; j++)
+            {
+                string our = su[j];
+                List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
+
+                if (Positions[our].CellValueValAsInt != 0)
+                    foreach (string other in others)
+                    {
+                        if (Positions[other].CellValueValAsInt > 0)
+                        {
+                            Console.WriteLine($"From position {our} removing hint {Positions[other].CellValueValAsInt}");
+                            Positions[our].RemoveHint(Positions[other].CellValueValAsInt);
+                        }
+                    }
+                else
                 {
-                    List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
+                    Console.WriteLine($"For position {our} removing all hints");
+                    Positions[our].Hints.Clear();
                 }
+
             }
         }
 
@@ -289,7 +362,7 @@ namespace BlazorWasmGamesProj.Code
                 else
                     result = null;
 
-                Console.WriteLine($"GET result = {(result == null ? "null" : result)} and _value = {_value}");
+                //Console.WriteLine($"GET result = {(result == null ? "null" : result)} and _value = {_value}");
                 return result;
             }
             set
@@ -323,7 +396,7 @@ namespace BlazorWasmGamesProj.Code
 
                 _value = result;
 
-                Console.WriteLine($"SET result = {(result == null ? "null" : result)} and value = {value}");
+                //Console.WriteLine($"SET result = {(result == null ? "null" : result)} and value = {value}");
             }
         }
     }
@@ -425,7 +498,29 @@ namespace BlazorWasmGamesProj.Code
             _positionType = positionType;
         }
 
+        public PositionTypeEnum GetPositionType()
+        {
+            return _positionType;
+        }
+
         CellIdValueField1 _cellValueField1;
+
+        public int CellValueValAsInt
+        {
+            get
+            {
+                string? strVal = CellValueVal;
+                if (strVal == null)
+                    return 0;
+                int intVal = 0;
+                if (int.TryParse(strVal, out intVal) == true)
+                {
+                    return intVal;
+                }
+                else
+                    return 0;
+            }
+        }
 
         public string? CellValueVal
         {
