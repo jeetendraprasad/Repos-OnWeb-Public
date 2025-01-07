@@ -3,6 +3,18 @@
 
 <h3>Sudoku</h3>
 
+<div>
+    <h3>Enter Dimensions</h3>
+    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" value=@_sudokuUi.RowsBlock @onchange="@(e => OnChangeGridSize(e, "rows_size"))" />
+    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" value=@_sudokuUi.ColsBlock @onchange="@(e => OnChangeGridSize(e, "cols_size"))" />
+
+
+    @foreach (int num in Enumerable.Range(1, _sudokuUi.GridSize))
+    {
+        <input type="text">
+    }
+</div>
+
 @code {
 
 }
