@@ -1,0 +1,53 @@
+﻿@page "/"
+
+<div>
+    <h3>Enter Dimensions</h3>
+    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" value=@RowsBlock @onchange="@(e => OnChangeGridSize(e, "rows_size"))" />
+    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" value=@ColsBlock @onchange="@(e => OnChangeGridSize(e, "cols_size"))" />
+</div>
+
+@code {
+    public int RowsBlock { get; set; }
+    public int ColsBlock { get; set; }
+
+    public int GridSize { get; set; } = 1;
+
+    bool _render = true;
+
+    protected override bool ShouldRender() => _render;
+
+    async Task OnChangeGridSize(ChangeEventArgs e, string controlId)
+    {
+        _render = false;
+
+        Console.WriteLine($" inside OnChangeGridSize with param controlId = {controlId}");
+
+        string varUpdatedValue = e.Value?.ToString() ?? "";
+
+        Console.WriteLine($"varupdatedValue  = {varUpdatedValue}");
+
+        if ("rows_size" == controlId)
+            RowsBlock = StrToIntDef(varUpdatedValue, 0);
+        else if ("cols_size" == controlId)
+            ColsBlock = StrToIntDef(varUpdatedValue, 0);
+        else
+            ;
+
+
+        if (RowsBlock > 3)
+            RowsBlock = 3;
+        if (ColsBlock > 3)
+            ColsBlock = 3;
+
+        Console.WriteLine($"RowsBlock = {RowsBlock} and ColsBlock = {ColsBlock}");
+
+        _render = true;
+
+        this.StateHasChanged();
+
+        await Task.FromResult(0);
+    }
+
+    public static int StrToIntDef(string s, int @default) =>
+    int.TryParse(s, out int result) ? result : @default;
+}
