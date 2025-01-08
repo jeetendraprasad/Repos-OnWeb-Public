@@ -7,8 +7,8 @@
 
 <div>
     <h3>Enter Dimensions</h3>
-    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="inputValue" @bind-value:set="(e) => this.OnChange(e, 1)" @bind-value:event="onchange" />
-    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="OnInput2" @bind:event="oninput" />
+    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="RowsBlock" @bind-value:set="(e) => this.OnChange(e, 1)" @bind-value:event="onchange" />
+    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="(e) => this.OnInput2(e, 1)" @bind:event="oninput" />
 </div>
 
 @code {
