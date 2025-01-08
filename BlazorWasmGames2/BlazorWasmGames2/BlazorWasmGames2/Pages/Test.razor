@@ -1,15 +1,25 @@
 ﻿@page "/"
 @using System.Text.RegularExpressions
 
+<script>
+
+</script>
+
 <div>
     <h3>Enter Dimensions</h3>
-    <input type="text" name="rows_size" id="rows_size" placeholder="Rows" @bind:get="inputValue" @bind:set="OnInput" @bind:event="oninput" />
+    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="inputValue" @bind-value:set="(e) => this.OnChange(e, 1)" @bind-value:event="onchange" />
     <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="OnInput2" @bind:event="oninput" />
 </div>
 
 @code {
 
     private string? inputValue;
+
+    private async Task OnChange(string text, int feldNummer)
+    {
+        Console.WriteLine($"text = {text} and feldNummer = {feldNummer}");
+        inputValue = text;
+    }
 
     private void OnInput(string value)
     {
@@ -18,19 +28,26 @@
         inputValue = newValue.Length > 4 ? "Long!" : newValue;
     }
 
+    async Task PerformSearch()
+    {
+        // Do something async with searchText
+    }
+
     private void OnInput2(string value)
     {
         var newValue = StrToIntDef(value ?? string.Empty, 0);
 
         if (newValue > 3)
             newValue = 3;
+        else if (newValue <= 0)
+            newValue = 0;
 
         ColsBlock = newValue.ToString();
     }
 
 
     public int RowsBlock { get; set; }
-    string? ColsBlock { get; set; }
+    string? ColsBlock { get; set; } = "2";
 
     public static int StrToIntDef(string s, int @default) =>
     int.TryParse(s, out int result) ? result : @default;
