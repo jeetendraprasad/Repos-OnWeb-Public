@@ -1,52 +1,36 @@
 ﻿@page "/"
+@using System.Text.RegularExpressions
 
 <div>
     <h3>Enter Dimensions</h3>
-    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" value=@RowsBlock @onchange="@(e => OnChangeGridSize(e, "rows_size"))" />
-    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" value=@ColsBlock @onchange="@(e => OnChangeGridSize(e, "cols_size"))" />
+    <input type="text" name="rows_size" id="rows_size" placeholder="Rows" @bind:get="inputValue" @bind:set="OnInput" @bind:event="oninput" />
+    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="OnInput2" @bind:event="oninput" />
 </div>
 
 @code {
-    public int RowsBlock { get; set; }
-    public int ColsBlock { get; set; }
 
-    public int GridSize { get; set; } = 1;
+    private string? inputValue;
 
-    bool _render = true;
-
-    protected override bool ShouldRender() => _render;
-
-    async Task OnChangeGridSize(ChangeEventArgs e, string controlId)
+    private void OnInput(string value)
     {
-        _render = false;
+        var newValue = value ?? string.Empty;
 
-        Console.WriteLine($" inside OnChangeGridSize with param controlId = {controlId}");
-
-        string varUpdatedValue = e.Value?.ToString() ?? "";
-
-        Console.WriteLine($"varupdatedValue  = {varUpdatedValue}");
-
-        if ("rows_size" == controlId)
-            RowsBlock = StrToIntDef(varUpdatedValue, 0);
-        else if ("cols_size" == controlId)
-            ColsBlock = StrToIntDef(varUpdatedValue, 0);
-        else
-            ;
-
-
-        if (RowsBlock > 3)
-            RowsBlock = 3;
-        if (ColsBlock > 3)
-            ColsBlock = 3;
-
-        Console.WriteLine($"RowsBlock = {RowsBlock} and ColsBlock = {ColsBlock}");
-
-        _render = true;
-
-        this.StateHasChanged();
-
-        await Task.FromResult(0);
+        inputValue = newValue.Length > 4 ? "Long!" : newValue;
     }
+
+    private void OnInput2(string value)
+    {
+        var newValue = StrToIntDef(value ?? string.Empty, 0);
+
+        if (newValue > 3)
+            newValue = 3;
+
+        ColsBlock = newValue.ToString();
+    }
+
+
+    public int RowsBlock { get; set; }
+    string? ColsBlock { get; set; }
 
     public static int StrToIntDef(string s, int @default) =>
     int.TryParse(s, out int result) ? result : @default;

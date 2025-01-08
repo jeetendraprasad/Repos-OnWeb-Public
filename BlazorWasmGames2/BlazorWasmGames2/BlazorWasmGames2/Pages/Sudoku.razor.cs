@@ -47,6 +47,9 @@ namespace BlazorWasmGames2.Pages
 
             _render = true;
 
+            await Task.Delay(1);
+            this.StateHasChanged();
+            await Task.Delay(1);
             this.StateHasChanged();
 
             await Task.FromResult(0);
