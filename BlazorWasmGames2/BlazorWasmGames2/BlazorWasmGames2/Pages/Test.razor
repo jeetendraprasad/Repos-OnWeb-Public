@@ -7,34 +7,25 @@
 
 <div>
     <h3>Enter Dimensions</h3>
-    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="RowsBlock" @bind-value:set="(e) => this.OnChange(e, 1)" @bind-value:event="onchange" />
-    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="(e) => this.OnInput2(e, 1)" @bind:event="oninput" />
+    <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="RowsBlock" @bind-value:set="(e) => this.OnChange_RowsBlock(e, 1, string.Empty)" @bind-value:event="onchange" />
+    <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="ColsBlock" @bind:set="(e) => this.OnChange_ColsBlock(e ?? string.Empty, 1)" @bind:event="oninput" />
 </div>
 
 @code {
 
-    private string? inputValue;
-
-    private async Task OnChange(string text, int feldNummer)
+    private async Task OnChange_RowsBlock(int value, int param1, string param2 = "")
     {
-        Console.WriteLine($"text = {text} and feldNummer = {feldNummer}");
-        inputValue = text;
+        Console.WriteLine($"text = {value} and param1 = {param1}, param2 = {param2}");
+        RowsBlock = value;
+
+        await Task.FromResult(0);
     }
 
-    private void OnInput(string value)
+    private void OnChange_ColsBlock(string value, int param1, string param2 = "")
     {
-        var newValue = value ?? string.Empty;
+        Console.WriteLine($"text = {value} and param1 = {param1}, param2 = {param2}");
 
-        inputValue = newValue.Length > 4 ? "Long!" : newValue;
-    }
 
-    async Task PerformSearch()
-    {
-        // Do something async with searchText
-    }
-
-    private void OnInput2(string value)
-    {
         var newValue = StrToIntDef(value ?? string.Empty, 0);
 
         if (newValue > 3)

@@ -27,8 +27,7 @@ namespace BlazorWasmGames2.Pages
                 _sudokuUi.RowsBlock = GenericMethods.StrToIntDef(varUpdatedValue, 0);
             else if ("cols_size" == controlId)
                 _sudokuUi.ColsBlock = GenericMethods.StrToIntDef(varUpdatedValue, 0);
-            else
-                ;
+            else { ; }
 
 
 
