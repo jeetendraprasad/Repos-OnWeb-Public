@@ -10,15 +10,20 @@
     <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="_sudokuUi.ColsBlock" @bind:set='async (value) => await this.OnChangeGridSize(value, "cols_size")' @bind:event="oninput" />
 
     <br />
+    <br />
 
-    <button class="btn btn-primary" style="visibility: @(_sudokuUi.GridUpdated ? "visible" : "hidden");" @onclick="OnChangeGrid">Update Grid ?</button>
+    <button class="btn btn-primary" style="visibility: @(_sudokuUi.GridUpdated ? strVisible : strHidden);" @onclick="OnChangeGrid">Update Grid ?</button>
 
-    @foreach (int num in Enumerable.Range(1, _sudokuUi.GridSize))
+    <br />
+    <br />
+
+    @foreach (int num in Enumerable.Range(1, _sudokuUi.Positions.Count))
     {
         <input type="text">
     }
 </div>
 
 @code {
-
+    const string strVisible = "visible";
+    const string strHidden = "hidden";
 }

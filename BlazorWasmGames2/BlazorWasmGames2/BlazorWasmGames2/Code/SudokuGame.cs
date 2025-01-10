@@ -7,13 +7,14 @@ namespace BlazorWasmGames2.Code
 {
     internal class SudokuGame
     {
-        int _rowsBlockMinVal = 2;
-        int _rowsBlockMaxVal = 3;
-        int _rowsBlockStartVal = 2;
-        int _colsBlockMinVal = 2;
-        int _colsBlockMaxVal = 3;
-        int _colsBlockStartVal = 2;
+        readonly int _rowsBlockMinVal = 2;
+        readonly int _rowsBlockMaxVal = 3;
+        readonly int _rowsBlockStartVal = 2;
+        readonly int _colsBlockMinVal = 2;
+        readonly int _colsBlockMaxVal = 3;
+        readonly int _colsBlockStartVal = 2;
 
+        Dictionary<string, SudokuCellInfo> _positions = [];
 
         Integer1 _rowsBlock, _colsBlock;
 
@@ -25,18 +26,79 @@ namespace BlazorWasmGames2.Code
             _rowsBlock = new(_rowsBlockStartVal, _rowsBlockMinVal, _rowsBlockMaxVal);
             _colsBlock = new(_colsBlockStartVal, _colsBlockMinVal, _colsBlockMaxVal);
 
-            //Init();
+            Init();
         }
+
+        public Dictionary<string, SudokuCellInfo> GetPositions()
+        {
+            return _positions;
+        }
+
+        void Init()
+        {
+            _rowsBlock = new(_rowsBlockStartVal, _rowsBlockMinVal, _rowsBlockMaxVal);
+            _colsBlock = new(_colsBlockStartVal, _colsBlockMinVal, _colsBlockMaxVal);
+
+            _positions = GetSuHoriFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x,
+                new SudokuCellInfo(cellId: x, positionType: SudokuPositionTypeEnum.None, maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
+            ))
+                .ToDictionary(t => t.Key, t => t.Value);
+        }
+
+
+        List<List<string>> GetSuHoriFull()
+        {
+            List<List<string>> retVal = [];
+
+            for (int i = 0; i < _rowsBlock.ValAsInt * _colsBlock.ValAsInt; i++)
+            {
+                //if(i == 1)
+                {
+                    List<string> list = GetSuHori(i);
+                    retVal.Add(list);
+                }
+            }
+
+            return retVal;
+        }
+
+        // Get Solving Unit - Horigontal list
+        List<string> GetSuHori(int rowNoSoduku)
+        {
+            List<string> retVal = [];
+
+            int p = (int)(rowNoSoduku / _colsBlock.ValAsInt);
+            int r = (int)(rowNoSoduku % _colsBlock.ValAsInt);
+
+            for (int j = 0; j < _rowsBlock.ValAsInt * _colsBlock.ValAsInt; j++)
+            {
+                int q = (int)(j / _rowsBlock.ValAsInt);
+                int s = (int)(j % _rowsBlock.ValAsInt);
+
+                string blockId = GetBlockId(p, q);
+
+                retVal.Add(string.Format(_cellIdPrefix, blockId, r, s));
+            }
+
+            return retVal;
+        }
+
+        public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
 
         public int RowsBlockMinVal { get => _rowsBlockMinVal; }
         public int RowsBlockMaxVal { get => _rowsBlockMaxVal; }
         public int ColsBlockMinVal { get => _colsBlockMinVal; }
         public int ColsBlockMaxVal { get => _colsBlockMaxVal; }
 
-        public void Resize(int rowsBlock, int colsBlock)
+        public void ReInit(int rowsBlock, int colsBlock)
         {
             _rowsBlock.ValAsInt = rowsBlock;
             _colsBlock.ValAsInt = colsBlock;
+
+            _positions = GetSuHoriFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x,
+                new SudokuCellInfo(cellId: x, positionType: SudokuPositionTypeEnum.None, maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
+            ))
+                .ToDictionary(t => t.Key, t => t.Value);
         }
 
         public int GetRowsBlock()
@@ -48,24 +110,14 @@ namespace BlazorWasmGames2.Code
         {
             return _colsBlock.ValAsInt;
         }
-
-        //public SudokuUi GetSudokuUi()
-        //{
-        //    SudokuUi sudokuUi = new SudokuUi();
-
-        //    sudokuUi.RowsBlock = _rowsBlock.ValAsInt;
-        //    sudokuUi.ColsBlock = _colsBlock.ValAsInt;
-
-        //    return sudokuUi;
-        //}
     }
 
     
 
     internal class Integer1
     {
-        int _minValue = int.MinValue;
-        int _maxValue = int.MaxValue;
+        readonly int _minValue = int.MinValue;
+        readonly int _maxValue = int.MaxValue;
 
         int _value = int.MinValue;
 
@@ -75,8 +127,6 @@ namespace BlazorWasmGames2.Code
             _maxValue = maxValue;
             SetValue(value);
         }
-        //public static implicit operator int(Integer1 d) => d.GetValue();
-        //public static explicit operator Integer1(int b) => new Integer1(b);
 
         private int GetValue() => _value;
         private int SetValue(int value)
@@ -93,7 +143,6 @@ namespace BlazorWasmGames2.Code
             return _value;
         }
 
-
         public int ValAsInt
         {
             get => GetValue();
@@ -101,91 +150,18 @@ namespace BlazorWasmGames2.Code
         }
     }
 
-    internal class CellIdValueField1(int maxValue)
-    {
-        readonly int _maxValue = maxValue;
-        string _value = "";
-
-        public int ValAsInt
-        {
-            get => GenericMethods.StrToIntDef(Val, default);
-            set => _value = value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        string Val
-        {
-            get
-            {
-                int retVal;
-
-                if (string.IsNullOrEmpty(_value))
-                {
-                    return "";
-                }
-                else if (int.TryParse(_value, out retVal) == false)
-                {
-                    return "";
-                }
-                else
-                {
-                    if (retVal < 1)
-                        retVal = 0;
-                    else if (retVal > _maxValue)
-                        retVal = _maxValue;
-                }
-
-                string result;
-                if (retVal != 0)
-                    result = retVal.ToString(CultureInfo.InvariantCulture);
-                else
-                    result = "";
-
-                return result;
-            }
-            set
-            {
-
-                int retVal = 0;
-
-                if (string.IsNullOrEmpty(value))
-                {
-                    _value = "";
-                }
-                else if (int.TryParse(value, out retVal) == false)
-                {
-                    _value = "";
-                }
-                else
-                {
-                    if (retVal < 1)
-                        retVal = 0;
-                    else if (retVal > _maxValue)
-                        retVal = _maxValue;
-                }
-                string result;
-
-                if (retVal != 0)
-                    result = retVal.ToString(CultureInfo.InvariantCulture);
-                else
-                    result = "";
-
-                _value = result;
-            }
-        }
-    }
-
     internal class SudokuCellInfo
     {
         string _cellId = "";
         SudokuPositionTypeEnum _positionType;
-        CellIdValueField1 _cellValueField1;
+        Integer1 _cellValueField1;
         readonly List<int> _hints = [];
 
         public SudokuCellInfo(string cellId, SudokuPositionTypeEnum positionType, int maxCellValue, int cellValue)
         {
             _cellId = cellId;
             _positionType = positionType;
-            _cellValueField1 = new(maxCellValue)
+            _cellValueField1 = new(cellValue, 0, maxCellValue)
             {
                 ValAsInt = cellValue
             };

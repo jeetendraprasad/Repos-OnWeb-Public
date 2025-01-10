@@ -17,8 +17,9 @@ namespace BlazorWasmGames2.Pages
         {
             _render = false;
 
-            _sudokuGame.Resize(_sudokuUi.RowsBlock, _sudokuUi.ColsBlock);
-            _sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
+            _sudokuGame.ReInit(_sudokuUi.RowsBlock, _sudokuUi.ColsBlock);
+
+            UpdateUISizeBindings();
 
             _render = true;
         }
@@ -44,7 +45,7 @@ namespace BlazorWasmGames2.Pages
             _sudokuUi.SetRowsBlock (rowsBlock1.ValAsInt);
             _sudokuUi.SetColsBlock (colsBlock1.ValAsInt);
 
-            Console.WriteLine(JsonSerializer.Serialize(_sudokuUi));
+            //Console.WriteLine(JsonSerializer.Serialize(_sudokuUi));
 
             _render = true;
             await Task.FromResult(0);
@@ -55,7 +56,6 @@ namespace BlazorWasmGames2.Pages
             _sudokuGame = new SudokuGame();
             //_sudokuUi = _sudokuGame.GetSudokuUi();
             UpdateUISizeBindings();
-            _sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
 
             await Task.FromResult(0);
         }
@@ -64,6 +64,8 @@ namespace BlazorWasmGames2.Pages
         {
             _sudokuUi.SetRowsBlock(_sudokuGame.GetRowsBlock());
             _sudokuUi.SetColsBlock(_sudokuGame.GetColsBlock());
+            //_sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
+            _sudokuUi.SetPositions (_sudokuGame.GetPositions());
         }
 
     }
@@ -71,6 +73,17 @@ namespace BlazorWasmGames2.Pages
     internal class SudokuUi
     {
         int _rowsBlock, _colsBlock;
+        Dictionary<string, SudokuCellInfo> _positions = [];
+
+        public Dictionary<string, SudokuCellInfo> Positions
+        {
+            get { return _positions; }
+        }
+
+        public void SetPositions(Dictionary<string, SudokuCellInfo> positions)
+        {
+            _positions = positions;
+        }
 
         public int RowsBlock
         {
@@ -95,6 +108,5 @@ namespace BlazorWasmGames2.Pages
 
         public bool GridUpdated { get; private set; } = false;
 
-        public int GridSize { get; set; } = 1;
     }
 }
