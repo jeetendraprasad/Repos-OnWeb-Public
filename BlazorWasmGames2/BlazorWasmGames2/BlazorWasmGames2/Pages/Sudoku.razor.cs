@@ -13,20 +13,25 @@ namespace BlazorWasmGames2.Pages
 
         protected override bool ShouldRender() => _render;
 
+        private void OnChangeGrid()
+        {
+            _render = false;
+
+            _sudokuGame.Resize(_sudokuUi.RowsBlock, _sudokuUi.ColsBlock);
+            _sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
+
+            _render = true;
+        }
+
         async Task OnChangeGridSize(int value, string controlId)
         {
             _render = false;
 
-            //Console.WriteLine($" inside OnChangeGridSize with param controlId = {controlId}");
-            //Console.WriteLine($"Updated value = {value}");
-
             if ("rows_size" == controlId)
-                _sudokuUi.RowsBlock = value;
+                _sudokuUi.SetRowsBlock (value);
             else if ("cols_size" == controlId)
-                _sudokuUi.ColsBlock = value;
+                _sudokuUi.SetColsBlock(value);
             else { ; }
-
-
 
             //UpdateUISizeBindings();
             //_sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
@@ -36,12 +41,13 @@ namespace BlazorWasmGames2.Pages
             rowsBlock1.ValAsInt = _sudokuUi.RowsBlock;
             colsBlock1.ValAsInt = _sudokuUi.ColsBlock;
 
-            _sudokuUi.RowsBlock = rowsBlock1.ValAsInt;
-            _sudokuUi.ColsBlock = colsBlock1.ValAsInt;
+            _sudokuUi.SetRowsBlock (rowsBlock1.ValAsInt);
+            _sudokuUi.SetColsBlock (colsBlock1.ValAsInt);
 
             Console.WriteLine(JsonSerializer.Serialize(_sudokuUi));
 
             _render = true;
+            await Task.FromResult(0);
         }
 
         protected override async Task OnInitializedAsync()
@@ -56,16 +62,38 @@ namespace BlazorWasmGames2.Pages
 
         void UpdateUISizeBindings()
         {
-            _sudokuUi.RowsBlock = _sudokuGame.GetRowsBlock();
-            _sudokuUi.ColsBlock = _sudokuGame.GetColsBlock();
+            _sudokuUi.SetRowsBlock(_sudokuGame.GetRowsBlock());
+            _sudokuUi.SetColsBlock(_sudokuGame.GetColsBlock());
         }
 
     }
 
     internal class SudokuUi
     {
-        public int RowsBlock { get; set; }
-        public int ColsBlock { get; set; }
+        int _rowsBlock, _colsBlock;
+
+        public int RowsBlock
+        {
+            get{ return _rowsBlock; }
+        }
+        public int ColsBlock
+        {
+            get { return _colsBlock; }
+        }
+
+        public void SetRowsBlock(int value)
+        {
+            GridUpdated = true;
+            _rowsBlock = value;
+        }
+
+        public void SetColsBlock(int value)
+        {
+            GridUpdated = true;
+            _colsBlock = value;
+        }
+
+        public bool GridUpdated { get; private set; } = false;
 
         public int GridSize { get; set; } = 1;
     }

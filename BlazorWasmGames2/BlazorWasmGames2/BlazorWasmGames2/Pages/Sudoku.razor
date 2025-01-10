@@ -9,6 +9,9 @@
     <input type="number" name="rows_size" id="rows_size" placeholder="Rows" @bind-value:get="_sudokuUi.RowsBlock" @bind-value:set='(value) => this.OnChangeGridSize(value, "rows_size")' @bind-value:event="onchange" />
     <input type="number" name="cols_size" id="cols_size" placeholder="Cols" @bind:get="_sudokuUi.ColsBlock" @bind:set='async (value) => await this.OnChangeGridSize(value, "cols_size")' @bind:event="oninput" />
 
+    <br />
+
+    <button class="btn btn-primary" style="visibility: @(_sudokuUi.GridUpdated ? "visible" : "hidden");" @onclick="OnChangeGrid">Update Grid ?</button>
 
     @foreach (int num in Enumerable.Range(1, _sudokuUi.GridSize))
     {
