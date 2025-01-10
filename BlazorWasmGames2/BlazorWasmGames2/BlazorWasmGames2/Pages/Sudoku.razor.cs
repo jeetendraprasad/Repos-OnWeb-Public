@@ -6,8 +6,8 @@ namespace BlazorWasmGames2.Pages
 {
     public partial class Sudoku
     {
-        SudokuGame _sudokuGame = new SudokuGame();
-        SudokuUi _sudokuUi = new SudokuUi();
+        SudokuGame _sudokuGame = new();
+        readonly SudokuUi _sudokuUi = new();
 
         bool _render = true;
 
