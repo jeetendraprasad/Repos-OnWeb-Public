@@ -13,20 +13,17 @@ namespace BlazorWasmGames2.Pages
 
         protected override bool ShouldRender() => _render;
 
-        async Task OnChangeGridSize(ChangeEventArgs e, string controlId)
+        async Task OnChangeGridSize(int value, string controlId)
         {
             _render = false;
 
-            Console.WriteLine($" inside OnChangeGridSize with param controlId = {controlId}");
-
-            string varUpdatedValue = e.Value?.ToString() ?? "";
-
-            Console.WriteLine($"varupdatedValue  = {varUpdatedValue}");
+            //Console.WriteLine($" inside OnChangeGridSize with param controlId = {controlId}");
+            //Console.WriteLine($"Updated value = {value}");
 
             if ("rows_size" == controlId)
-                _sudokuUi.RowsBlock = GenericMethods.StrToIntDef(varUpdatedValue, 0);
+                _sudokuUi.RowsBlock = value;
             else if ("cols_size" == controlId)
-                _sudokuUi.ColsBlock = GenericMethods.StrToIntDef(varUpdatedValue, 0);
+                _sudokuUi.ColsBlock = value;
             else { ; }
 
 
