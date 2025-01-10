@@ -42,13 +42,6 @@ namespace BlazorWasmGames2.Pages
             Console.WriteLine(JsonSerializer.Serialize(_sudokuUi));
 
             _render = true;
-
-            await Task.Delay(1);
-            this.StateHasChanged();
-            await Task.Delay(1);
-            this.StateHasChanged();
-
-            await Task.FromResult(0);
         }
 
         protected override async Task OnInitializedAsync()
