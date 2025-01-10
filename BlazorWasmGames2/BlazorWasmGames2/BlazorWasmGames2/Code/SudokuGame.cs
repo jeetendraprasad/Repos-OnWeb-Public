@@ -168,6 +168,11 @@ namespace BlazorWasmGames2.Code
 
             _hints = Enumerable.Range(1, maxCellValue).ToList();
         }
+
+        public int CellValue
+        {
+            get => _cellValueField1.ValAsInt;
+        }
     }
 
     internal enum SudokuPositionTypeEnum

@@ -17,13 +17,28 @@
     <br />
     <br />
 
-    @foreach (int num in Enumerable.Range(1, _sudokuUi.Positions.Count))
+</div>
+
+<div style="@_sudokuUi.GetSodukuStyle()">
+    @foreach (var item in _sudokuUi.Positions)
     {
-        <input type="text">
+        <div style="@_sudokuUi.GetCellStyle(item.Key)" id="@item.Key">
+            @item.Key
+            <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
+                   min="0" max="@(_sudokuUi.RowsBlock * _sudokuUi.ColsBlock)" step="1"
+            value="@item.Value.CellValue"
+            />
+            <br />
+            @for (int m = 0; m < _sudokuUi.RowsBlock * _sudokuUi.ColsBlock; m++)
+            {
+                <button style="font-size: 0.5em;" id="@(item.Key+":H"+(m+1).ToString())">@(m + 1)</button>
+            }
+        </div>
     }
 </div>
 
 @code {
+
     const string strVisible = "visible";
     const string strHidden = "hidden";
 }
