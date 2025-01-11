@@ -84,6 +84,9 @@ namespace BlazorWasmGames2.Pages
 
         public void SetPositions(Dictionary<string, SudokuCellInfo> positions)
         {
+            if(_positions.Count != positions.Count)
+                this.GridUpdated = false;
+
             _positions = positions;
         }
 
