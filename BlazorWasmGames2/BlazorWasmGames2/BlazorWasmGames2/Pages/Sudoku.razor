@@ -26,8 +26,7 @@
             @item.Key
             <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
                    min="0" max="@(_sudokuUi.RowsBlock * _sudokuUi.ColsBlock)" step="1"
-            value="@item.Value.CellValue"
-            />
+                   value="@item.Value.CellValue" />
             <br />
             @for (int m = 0; m < _sudokuUi.RowsBlock * _sudokuUi.ColsBlock; m++)
             {
