@@ -24,6 +24,16 @@ namespace BlazorWasmGames2.Pages
             _render = true;
         }
 
+        async Task OnChangeCellInput(int value, string cellInputId)
+        {
+            _render = false;
+
+            _sudokuGame.AddMove(value, cellInputId);
+
+            _render = true;
+            await Task.FromResult(0);
+        }
+
         async Task OnChangeGridSize(int value, string controlId)
         {
             _render = false;

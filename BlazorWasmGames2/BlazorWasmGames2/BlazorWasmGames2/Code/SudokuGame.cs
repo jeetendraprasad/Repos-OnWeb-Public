@@ -1,6 +1,7 @@
 ﻿using BlazorWasmGames2.Pages;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorWasmGames2.Code
@@ -15,6 +16,7 @@ namespace BlazorWasmGames2.Code
         readonly int _colsBlockStartVal = 2;
 
         Dictionary<string, SudokuCellInfo> _positions = [];
+        List<KeyValuePair<string, int>> _moves = [];
 
         Integer1 _rowsBlock, _colsBlock;
 
@@ -32,6 +34,13 @@ namespace BlazorWasmGames2.Code
         public Dictionary<string, SudokuCellInfo> GetPositions()
         {
             return _positions;
+        }
+
+        public void AddMove(int value, string cellInputId)
+        {
+            _moves.Add(new(cellInputId, value));
+
+            Console.WriteLine(JsonSerializer.Serialize(_moves));
         }
 
         void Init()

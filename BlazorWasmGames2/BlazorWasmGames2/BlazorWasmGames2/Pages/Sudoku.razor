@@ -22,11 +22,12 @@
 <div style="@_sudokuUi.GetSodukuStyle()">
     @foreach (var item in _sudokuUi.Positions)
     {
+        string cellInputId = item.Key + ":I";
         <div style="@_sudokuUi.GetCellStyle(item.Key)" id="@item.Key">
             @item.Key
-            <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
+            <input type="number" style="overflow : hidden; width : 100%;" id="@cellInputId"
                    min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
-                   value="@item.Value.CellValue" />
+                   @bind-value:get="item.Value.CellValue" @bind-value:set='(value) => this.OnChangeCellInput(value, cellInputId)' @bind-value:event="onchange" />
             <br />
             @for (int m = 0; m < Math.Sqrt(_sudokuUi.Positions.Count); m++)
             {
