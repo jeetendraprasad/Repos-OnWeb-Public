@@ -25,10 +25,10 @@
         <div style="@_sudokuUi.GetCellStyle(item.Key)" id="@item.Key">
             @item.Key
             <input type="number" style="overflow : hidden; width : 100%;" id="@(item.Key+":L")"
-                   min="0" max="@(_sudokuUi.RowsBlock * _sudokuUi.ColsBlock)" step="1"
+                   min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
                    value="@item.Value.CellValue" />
             <br />
-            @for (int m = 0; m < _sudokuUi.RowsBlock * _sudokuUi.ColsBlock; m++)
+            @for (int m = 0; m < Math.Sqrt(_sudokuUi.Positions.Count); m++)
             {
                 <button style="font-size: 0.5em;" id="@(item.Key+":H"+(m+1).ToString())">@(m + 1)</button>
             }
