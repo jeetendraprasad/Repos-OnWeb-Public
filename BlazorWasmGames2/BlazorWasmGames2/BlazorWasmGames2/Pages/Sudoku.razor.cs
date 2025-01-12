@@ -22,15 +22,19 @@ namespace BlazorWasmGames2.Pages
             UpdateUISizeBindings();
 
             _render = true;
+            this.StateHasChanged();
         }
 
         async Task OnChangeCellInput(int value, string cellInputId)
         {
             _render = false;
 
-            _sudokuGame.AddMove(value, cellInputId);
+            _sudokuGame.UpdatePosition(value, cellInputId);
+            _sudokuUi.SetPositions(_sudokuGame.GetPositionsCloned());
 
             _render = true;
+            this.StateHasChanged();
+
             await Task.FromResult(0);
         }
 
@@ -58,6 +62,9 @@ namespace BlazorWasmGames2.Pages
             //Console.WriteLine(JsonSerializer.Serialize(_sudokuUi));
 
             _render = true;
+
+            this.StateHasChanged();
+
             await Task.FromResult(0);
         }
 
@@ -75,7 +82,7 @@ namespace BlazorWasmGames2.Pages
             _sudokuUi.SetRowsBlock(_sudokuGame.GetRowsBlock());
             _sudokuUi.SetColsBlock(_sudokuGame.GetColsBlock());
             //_sudokuUi.GridSize = _sudokuUi.RowsBlock * _sudokuUi.ColsBlock;
-            _sudokuUi.SetPositions(_sudokuGame.GetPositions());
+            _sudokuUi.SetPositions(_sudokuGame.GetPositionsCloned());
         }
 
 

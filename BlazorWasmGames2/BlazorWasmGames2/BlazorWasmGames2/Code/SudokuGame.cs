@@ -16,7 +16,7 @@ namespace BlazorWasmGames2.Code
         readonly int _colsBlockStartVal = 2;
 
         Dictionary<string, SudokuCellInfo> _positions = [];
-        List<KeyValuePair<string, int>> _moves = [];
+        //List<KeyValuePair<string, int>> _moves = [];
 
         Integer1 _rowsBlock, _colsBlock;
 
@@ -31,16 +31,20 @@ namespace BlazorWasmGames2.Code
             Init();
         }
 
-        public Dictionary<string, SudokuCellInfo> GetPositions()
+        public Dictionary<string, SudokuCellInfo> GetPositionsCloned()
         {
-            return _positions;
+            Dictionary<string, SudokuCellInfo> newDictionary = _positions.ToDictionary(entry => entry.Key,
+                                               entry => (SudokuCellInfo)entry.Value.Clone());
+
+            return newDictionary;
         }
 
-        public void AddMove(int value, string cellInputId)
+        public void UpdatePosition(int value, string cellInputId)
         {
-            _moves.Add(new(cellInputId, value));
+//            _moves.Add(new(cellInputId, value));
+            _positions[cellInputId].CellValue = value;
 
-            Console.WriteLine(JsonSerializer.Serialize(_moves));
+            Console.WriteLine(JsonSerializer.Serialize(_positions));
         }
 
         void Init()
@@ -49,7 +53,9 @@ namespace BlazorWasmGames2.Code
             _colsBlock = new(_colsBlockStartVal, _colsBlockMinVal, _colsBlockMaxVal);
 
             _positions = GetSuHoriFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x,
-                new SudokuCellInfo(cellId: x, positionType: SudokuPositionTypeEnum.None, maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
+                new SudokuCellInfo(cellId: x,
+                //positionType: SudokuPositionTypeEnum.None,
+                maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
             ))
                 .ToDictionary(t => t.Key, t => t.Value);
         }
@@ -105,7 +111,9 @@ namespace BlazorWasmGames2.Code
             _colsBlock.ValAsInt = colsBlock;
 
             _positions = GetSuHoriFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x,
-                new SudokuCellInfo(cellId: x, positionType: SudokuPositionTypeEnum.None, maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
+                new SudokuCellInfo(cellId: x,
+                //positionType: SudokuPositionTypeEnum.None,
+                maxCellValue: _rowsBlock.ValAsInt * _colsBlock.ValAsInt, 0)
             ))
                 .ToDictionary(t => t.Key, t => t.Value);
         }
@@ -121,9 +129,9 @@ namespace BlazorWasmGames2.Code
         }
     }
 
-    
 
-    internal class Integer1
+
+    internal class Integer1 : ICloneable
     {
         readonly int _minValue = int.MinValue;
         readonly int _maxValue = int.MaxValue;
@@ -136,6 +144,8 @@ namespace BlazorWasmGames2.Code
             _maxValue = maxValue;
             SetValue(value);
         }
+
+        public int GetMaxValue() => _maxValue;
 
         private int GetValue() => _value;
         private int SetValue(int value)
@@ -152,6 +162,12 @@ namespace BlazorWasmGames2.Code
             return _value;
         }
 
+        public object Clone()
+        {
+            Integer1 cloned = new Integer1(this._value, this._minValue, this._maxValue);
+            return cloned;
+        }
+
         public int ValAsInt
         {
             get => GetValue();
@@ -159,17 +175,19 @@ namespace BlazorWasmGames2.Code
         }
     }
 
-    internal class SudokuCellInfo
+    internal class SudokuCellInfo : ICloneable
     {
         string _cellId = "";
-        SudokuPositionTypeEnum _positionType;
+        //SudokuPositionTypeEnum _positionType;
         Integer1 _cellValueField1;
         readonly List<int> _hints = [];
 
-        public SudokuCellInfo(string cellId, SudokuPositionTypeEnum positionType, int maxCellValue, int cellValue)
+        public SudokuCellInfo(string cellId,
+            //SudokuPositionTypeEnum positionType,
+            int maxCellValue, int cellValue)
         {
             _cellId = cellId;
-            _positionType = positionType;
+            //_positionType = positionType;
             _cellValueField1 = new(cellValue, 0, maxCellValue)
             {
                 ValAsInt = cellValue
@@ -181,13 +199,21 @@ namespace BlazorWasmGames2.Code
         public int CellValue
         {
             get => _cellValueField1.ValAsInt;
+            set => _cellValueField1.ValAsInt = value;
+        }
+
+        public object Clone()
+        {
+            SudokuCellInfo cloned = new SudokuCellInfo(this._cellId, this._cellValueField1.GetMaxValue(), this.CellValue);
+
+            return cloned;
         }
     }
 
-    internal enum SudokuPositionTypeEnum
-    {
-        None,
-        Manual,
-        Solve,
-    }
+    //internal enum SudokuPositionTypeEnum
+    //{
+    //    None,
+    //    Manual,
+    //    Solve,
+    //}
 }
