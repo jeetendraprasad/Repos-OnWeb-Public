@@ -33,10 +33,10 @@ namespace BlazorWasmGames2.Code
 
         public Dictionary<string, SudokuCellInfo> GetPositionsCloned()
         {
-            Dictionary<string, SudokuCellInfo> newDictionary = _positions.ToDictionary(entry => entry.Key,
+            Dictionary<string, SudokuCellInfo> newClonedDictionary = _positions.ToDictionary(entry => entry.Key,
                                                entry => (SudokuCellInfo)entry.Value.Clone());
 
-            return newDictionary;
+            return newClonedDictionary;
         }
 
         public void UpdatePosition(int value, string cellInputId)

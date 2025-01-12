@@ -20,15 +20,6 @@
 
 </div>
 
-<div>
-    @(JsonSerializer.Serialize(_sudokuUi.Positions))
-</div>
-<br />
-<br />
-<div>
-    @(JsonSerializer.Serialize(_sudokuGame.GetPositionsCloned()))
-</div>
-
 <div style="@_sudokuUi.GetSodukuStyle()">
     @foreach (var item in _sudokuUi.Positions)
     {

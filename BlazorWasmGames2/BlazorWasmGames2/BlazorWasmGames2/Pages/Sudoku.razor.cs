@@ -22,7 +22,7 @@ namespace BlazorWasmGames2.Pages
             UpdateUISizeBindings();
 
             _render = true;
-            this.StateHasChanged();
+            //this.StateHasChanged();
         }
 
         async Task OnChangeCellInput(int value, string cellInputId)
@@ -33,7 +33,7 @@ namespace BlazorWasmGames2.Pages
             _sudokuUi.SetPositions(_sudokuGame.GetPositionsCloned());
 
             _render = true;
-            this.StateHasChanged();
+            //this.StateHasChanged();
 
             await Task.FromResult(0);
         }
@@ -63,7 +63,7 @@ namespace BlazorWasmGames2.Pages
 
             _render = true;
 
-            this.StateHasChanged();
+            //this.StateHasChanged();
 
             await Task.FromResult(0);
         }
