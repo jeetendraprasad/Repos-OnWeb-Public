@@ -209,12 +209,19 @@ namespace BlazorWasmGames2.Code
         }
     }
 
+    internal class HintInfo
+    {
+        public string HintId { get; set; }
+        public int HintNo { get; set; }
+        public bool HintEnabled { get; set; }
+    }
+
     internal class SudokuCellInfo : ICloneable
     {
         string _cellId = "";
         //SudokuPositionTypeEnum _positionType;
         Integer1 _cellValueField1;
-        List<int> _hints = [];
+        List<HintInfo> _hints = [];
 
         public SudokuCellInfo(string cellId,
             //SudokuPositionTypeEnum positionType,
@@ -227,18 +234,18 @@ namespace BlazorWasmGames2.Code
                 ValAsInt = cellValue
             };
 
-            _hints = Enumerable.Range(1, maxCellValue).ToList();
+            _hints = Enumerable.Range(1, maxCellValue).Select( x => new HintInfo() { HintEnabled = true, HintId = _cellId + $":H{x}", HintNo = x } ).ToList();
         }
 
         public void ResetHints()
         {
             if (CellValue > 0)
-                _hints = [];
+                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo() { HintEnabled = false, HintId = _cellId + $":H{x}", HintNo = x }).ToList();
             else
-                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).ToList();
+                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo() { HintEnabled = true, HintId = _cellId + $":H{x}", HintNo = x }).ToList();
         }
 
-        public List<int> Hints { get => _hints; }
+        public List<HintInfo> Hints { get => _hints; }
 
         public int CellValue
         {
