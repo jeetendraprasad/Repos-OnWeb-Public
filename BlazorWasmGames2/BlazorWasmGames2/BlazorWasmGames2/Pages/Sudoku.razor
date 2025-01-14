@@ -30,10 +30,13 @@
             min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
             @bind-value:get="item.Value.CellValue" @bind-value:set='(value) => this.OnChangeCellInput(value, item.Key)' @bind-value:event="onchange" />
             <br />
-            @for (int m = 0; m < Math.Sqrt(_sudokuUi.Positions.Count); m++)
+            @for (int m = 0; m < item.Value.Hints.Count; m++)
             {
-                string hintId = item.Key + ":H" + (m + 1).ToString();
-                <button style="font-size: 0.5em;" id="@hintId">@(m + 1)</button>
+                string hintId = item.Value.Hints[m].HintId;
+                int hintNo = item.Value.Hints[m].HintNo;
+                bool hintEnabled = item.Value.Hints[m].HintEnabled;
+                Console.WriteLine($"Hint Enabled =  {hintEnabled}");
+                <button type="button" style="font-size: 0.5em;" disabled="@(!hintEnabled)" id="@hintId">@hintNo</button>
             }
         </div>
     }

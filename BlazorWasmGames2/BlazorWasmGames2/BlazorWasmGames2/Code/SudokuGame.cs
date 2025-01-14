@@ -209,11 +209,29 @@ namespace BlazorWasmGames2.Code
         }
     }
 
-    internal class HintInfo
+    internal class HintInfo : ICloneable
     {
-        public string HintId { get; set; }
-        public int HintNo { get; set; }
-        public bool HintEnabled { get; set; }
+        //readonly string _hintId = "";
+        //readonly int _hintNo = 0;
+        //readonly bool _hintEnabled = false;
+
+        public HintInfo(string hintId, int hintNo, bool hintEnabled)
+        {
+            HintId = hintId;
+            HintNo = hintNo;
+            HintEnabled = hintEnabled;
+        }
+
+        public string HintId { get; private set; }
+        public int HintNo { get; private set; }
+        public bool HintEnabled { get; private set; }
+
+        public object Clone()
+        {
+            HintInfo cloned = new HintInfo(this.HintId, this.HintNo, this.HintEnabled);
+
+            return cloned;
+        }
     }
 
     internal class SudokuCellInfo : ICloneable
@@ -234,15 +252,15 @@ namespace BlazorWasmGames2.Code
                 ValAsInt = cellValue
             };
 
-            _hints = Enumerable.Range(1, maxCellValue).Select( x => new HintInfo() { HintEnabled = true, HintId = _cellId + $":H{x}", HintNo = x } ).ToList();
+            _hints = Enumerable.Range(1, maxCellValue).Select( x => new HintInfo(hintId: _cellId + $":H{x}", hintNo: x, hintEnabled: true) ).ToList();
         }
 
         public void ResetHints()
         {
             if (CellValue > 0)
-                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo() { HintEnabled = false, HintId = _cellId + $":H{x}", HintNo = x }).ToList();
+                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo(hintId: _cellId + $":H{x}", hintNo: x, hintEnabled: false) ).ToList();
             else
-                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo() { HintEnabled = true, HintId = _cellId + $":H{x}", HintNo = x }).ToList();
+                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo(hintId: _cellId + $":H{x}", hintNo: x, hintEnabled: true) ).ToList();
         }
 
         public List<HintInfo> Hints { get => _hints; }
@@ -255,7 +273,9 @@ namespace BlazorWasmGames2.Code
 
         public object Clone()
         {
-            SudokuCellInfo cloned = new SudokuCellInfo(this._cellId, this._cellValueField1.GetMaxValue(), this.CellValue);
+            SudokuCellInfo cloned = new SudokuCellInfo(this._cellId, this._cellValueField1.GetMaxValue(), this.CellValue) {};
+
+            cloned._hints = this.Hints.Select( x => (HintInfo)x.Clone() ).ToList();
 
             return cloned;
         }
