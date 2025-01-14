@@ -27,12 +27,13 @@
         <div style="@_sudokuUi.GetCellStyle(item.Key)" id="@item.Key">
             @(item.Key + "-" + _sudokuUi.Positions[item.Key].CellValue)
             <input type="number" style="overflow : hidden; width : 100%;" id="@cellInputId"
-                   min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
-                   @bind-value:get="item.Value.CellValue" @bind-value:set='(value) => this.OnChangeCellInput(value, item.Key)' @bind-value:event="onchange" />
+            min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
+            @bind-value:get="item.Value.CellValue" @bind-value:set='(value) => this.OnChangeCellInput(value, item.Key)' @bind-value:event="onchange" />
             <br />
             @for (int m = 0; m < Math.Sqrt(_sudokuUi.Positions.Count); m++)
             {
-                <button style="font-size: 0.5em;" id="@(item.Key+":H"+(m+1).ToString())">@(m + 1)</button>
+                string hintId = item.Key + ":H" + (m + 1).ToString();
+                <button style="font-size: 0.5em;" id="@hintId">@(m + 1)</button>
             }
         </div>
     }

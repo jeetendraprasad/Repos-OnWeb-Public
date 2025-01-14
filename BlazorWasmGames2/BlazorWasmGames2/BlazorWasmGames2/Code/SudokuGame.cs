@@ -41,7 +41,7 @@ namespace BlazorWasmGames2.Code
 
         public void UpdatePosition(int value, string cellInputId)
         {
-//            _moves.Add(new(cellInputId, value));
+            //            _moves.Add(new(cellInputId, value));
             _positions[cellInputId].CellValue = value;
 
             Console.WriteLine(JsonSerializer.Serialize(_positions));
@@ -127,6 +127,40 @@ namespace BlazorWasmGames2.Code
         {
             return _colsBlock.ValAsInt;
         }
+
+        void ResetHints()
+        {
+            for (int i = 0; i < Math.Sqrt(_positions.Count); i++)
+            {
+                List<SudokuCellInfo> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Value).ToList();
+
+                foreach (SudokuCellInfo cellInfo in su)
+                {
+                    cellInfo.ResetHints();
+                }
+            }
+        }
+
+        public void RenewHints()
+        {
+            ResetHints();
+            CheckHori();
+        }
+
+        private void CheckHori()
+        {
+            for (int i = 0; i < Math.Sqrt(_positions.Count); i++)
+            {
+                List<string> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Key).ToList();
+
+                //CheckInternal(su);
+            }
+        }
+
+        private void CheckInternal(List<string> su)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
@@ -180,7 +214,7 @@ namespace BlazorWasmGames2.Code
         string _cellId = "";
         //SudokuPositionTypeEnum _positionType;
         Integer1 _cellValueField1;
-        readonly List<int> _hints = [];
+        List<int> _hints = [];
 
         public SudokuCellInfo(string cellId,
             //SudokuPositionTypeEnum positionType,
@@ -195,6 +229,16 @@ namespace BlazorWasmGames2.Code
 
             _hints = Enumerable.Range(1, maxCellValue).ToList();
         }
+
+        public void ResetHints()
+        {
+            if (CellValue > 0)
+                _hints = [];
+            else
+                _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).ToList();
+        }
+
+        public List<int> Hints { get => _hints; }
 
         public int CellValue
         {

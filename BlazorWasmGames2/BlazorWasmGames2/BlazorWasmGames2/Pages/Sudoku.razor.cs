@@ -30,6 +30,9 @@ namespace BlazorWasmGames2.Pages
             _render = false;
 
             _sudokuGame.UpdatePosition(value, cellInputId);
+
+            _sudokuGame.RenewHints();
+
             _sudokuUi.SetPositions(_sudokuGame.GetPositionsCloned());
 
             _render = true;
