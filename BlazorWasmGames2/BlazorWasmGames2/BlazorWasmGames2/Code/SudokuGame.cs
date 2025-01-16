@@ -61,7 +61,7 @@ namespace BlazorWasmGames2.Code
                 .ToDictionary(t => t.Key, t => t.Value);
         }
 
-
+        // Get Solving Unit - Horigontal list - Full
         List<List<string>> GetSuHoriFull()
         {
             List<List<string>> retVal = [];
@@ -77,7 +77,6 @@ namespace BlazorWasmGames2.Code
 
             return retVal;
         }
-
         // Get Solving Unit - Horigontal list
         List<string> GetSuHori(int rowNoSoduku)
         {
@@ -90,6 +89,43 @@ namespace BlazorWasmGames2.Code
             {
                 int q = (int)(j / _rowsBlock.ValAsInt);
                 int s = (int)(j % _rowsBlock.ValAsInt);
+
+                string blockId = GetBlockId(p, q);
+
+                retVal.Add(string.Format(_cellIdPrefix, blockId, r, s));
+            }
+
+            return retVal;
+        }
+
+        // Get Solving Unit - Vertical list - Full
+        List<List<string>> GetSuVertFull()
+        {
+            List<List<string>> retVal = [];
+
+            for (int i = 0; i < _rowsBlock.ValAsInt * _colsBlock.ValAsInt; i++)
+            {
+                //if(i == 1)
+                {
+                    List<string> list = GetSuVert(i);
+                    retVal.Add(list);
+                }
+            }
+
+            return retVal;
+        }
+        // Get Solving Unit - Vertical list
+        List<string> GetSuVert(int colNoSoduku)
+        {
+            List<string> retVal = [];
+
+            int q = (int)(colNoSoduku / _rowsBlock.ValAsInt);
+            int s = (colNoSoduku % _rowsBlock.ValAsInt);
+
+            for (int i = 0; i < _rowsBlock.ValAsInt * _colsBlock.ValAsInt; i++)
+            {
+                int p = (int)(i / _colsBlock.ValAsInt);
+                int r = (int)(i % _colsBlock.ValAsInt);
 
                 string blockId = GetBlockId(p, q);
 
@@ -146,6 +182,7 @@ namespace BlazorWasmGames2.Code
         {
             ResetHints();
             CheckHori();
+            CheckVert();
         }
 
         private void CheckHori()
@@ -158,15 +195,19 @@ namespace BlazorWasmGames2.Code
             }
         }
 
-        //private void CheckVert()
-        //{
-        //    for (int i = 0; i < Math.Sqrt(_positions.Count); i++)
-        //    {
-        //        List<string> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Key).ToList();
+        private void CheckVert()
+        {
+            Dictionary<string, SudokuCellInfo> _positionsVert = GetSuVertFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x, _positions[x]
+            ))
+                .ToDictionary(t => t.Key, t => t.Value);
 
-        //        CheckInternal(su);
-        //    }
-        //}
+            for (int i = 0; i < Math.Sqrt(_positionsVert.Count); i++)
+            {
+                List<string> su = _positionsVert.Skip(i * (int)Math.Sqrt(_positionsVert.Count)).Take((int)Math.Sqrt(_positionsVert.Count)).Select(x => x.Key).ToList();
+
+                CheckInternal(su);
+            }
+        }
 
         private void CheckInternal(List<string> su)
         {
