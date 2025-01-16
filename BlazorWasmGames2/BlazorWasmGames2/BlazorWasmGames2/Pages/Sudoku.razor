@@ -25,7 +25,6 @@
     {
         string cellInputId = item.Key + ":I";
         <div style="@_sudokuUi.GetCellStyle(item.Key)" id="@item.Key">
-            @(item.Key + "-" + _sudokuUi.Positions[item.Key].CellValue)
             <input type="number" style="overflow : hidden; width : 100%;" id="@cellInputId"
             min="0" max="@(Math.Sqrt(_sudokuUi.Positions.Count))" step="1"
             @bind-value:get="item.Value.CellValue" @bind-value:set='(value) => this.OnChangeCellInput(value, item.Key)' @bind-value:event="onchange" />

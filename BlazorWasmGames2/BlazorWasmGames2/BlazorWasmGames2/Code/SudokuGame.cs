@@ -223,9 +223,11 @@ namespace BlazorWasmGames2.Code
 
         private void CheckHori()
         {
-            for (int i = 0; i < Math.Sqrt(_positions.Count); i++)
+            Dictionary<string, SudokuCellInfo> _positions1 = GetSuHoriFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x, _positions[x])).ToDictionary(t => t.Key, t => t.Value);
+
+            for (int i = 0; i < Math.Sqrt(_positions1.Count); i++)
             {
-                List<string> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Key).ToList();
+                List<string> su = _positions1.Skip(i * (int)Math.Sqrt(_positions1.Count)).Take((int)Math.Sqrt(_positions1.Count)).Select(x => x.Key).ToList();
 
                 CheckInternal(su);
             }
