@@ -1,4 +1,5 @@
 ﻿using BlazorWasmGames2.Pages;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
@@ -153,13 +154,45 @@ namespace BlazorWasmGames2.Code
             {
                 List<string> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Key).ToList();
 
-                //CheckInternal(su);
+                CheckInternal(su);
             }
         }
 
+        //private void CheckVert()
+        //{
+        //    for (int i = 0; i < Math.Sqrt(_positions.Count); i++)
+        //    {
+        //        List<string> su = _positions.Skip(i * (int)Math.Sqrt(_positions.Count)).Take((int)Math.Sqrt(_positions.Count)).Select(x => x.Key).ToList();
+
+        //        CheckInternal(su);
+        //    }
+        //}
+
         private void CheckInternal(List<string> su)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Solving for unit \r\n {JsonSerializer.Serialize(su ?? [])}");
+
+            for (int j = 0; j < su.Count; j++)
+            {
+                string our = su[j];
+                List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
+
+                if (_positions[our].CellValue == 0)
+                    foreach (string other in others)
+                    {
+                        if (_positions[other].CellValue > 0)
+                        {
+                            Console.WriteLine($"From position {our} removing hint {_positions[other].CellValue}");
+                            _positions[our].DisableHint(_positions[other].CellValue);
+                        }
+                    }
+                else
+                {
+                    Console.WriteLine($"For position {our} removing all hints");
+                    _positions[our].ResetHints();
+                }
+
+            }
         }
     }
 
@@ -232,6 +265,8 @@ namespace BlazorWasmGames2.Code
 
             return cloned;
         }
+
+        public void DisableHint() => HintEnabled = false;
     }
 
     internal class SudokuCellInfo : ICloneable
@@ -255,6 +290,12 @@ namespace BlazorWasmGames2.Code
             _hints = Enumerable.Range(1, maxCellValue).Select( x => new HintInfo(hintId: _cellId + $":H{x}", hintNo: x, hintEnabled: true) ).ToList();
         }
 
+        public void DisableHint(int hintToDisable)
+        {
+            //_hints.RemoveAll( x => x.HintNo == hintToRemove );
+            _hints.ForEach( (item) => { if (item.HintNo == hintToDisable) item.DisableHint(); ; } );
+        }
+
         public void ResetHints()
         {
             if (CellValue > 0)
@@ -263,7 +304,12 @@ namespace BlazorWasmGames2.Code
                 _hints = Enumerable.Range(1, _cellValueField1.GetMaxValue()).Select(x => new HintInfo(hintId: _cellId + $":H{x}", hintNo: x, hintEnabled: true) ).ToList();
         }
 
-        public List<HintInfo> Hints { get => _hints; }
+        public ReadOnlyCollection<HintInfo> Hints { get
+            {
+                ReadOnlyCollection<HintInfo> hintReadOnly = _hints.AsReadOnly();
+                return hintReadOnly;
+            }
+        }
 
         public int CellValue
         {
