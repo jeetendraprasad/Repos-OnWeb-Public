@@ -135,6 +135,41 @@ namespace BlazorWasmGames2.Code
             return retVal;
         }
 
+        // -----------
+        // Get Solving Unit - for a block - Full
+        List<List<string>> GetSuBlockFull()
+        {
+            List<List<string>> retVal = [];
+
+            for (int i = 0; i < _rowsBlock.ValAsInt; i++)
+                for (int j = 0; j < _colsBlock.ValAsInt; j++)
+                {
+                    List<string> list = GetSuBlock(i, j);
+                    retVal.Add(list);
+                }
+
+            return retVal;
+        }
+        // Get Solving Unit - for a block
+        List<string> GetSuBlock(int rowNoBlock, int colNoBlock)
+        {
+            List<string> retVal = [];
+
+            string blockId = string.Format(_blockIdPrefix, rowNoBlock, colNoBlock);
+
+            for (int i = 0; i < _rowsBlock.ValAsInt; i++)
+                for (int j = 0; j < _colsBlock.ValAsInt; j++)
+                {
+                    string id = string.Format(_cellIdPrefix, blockId, j, i);
+                    //Console.WriteLine($"ID = {id}");
+                    retVal.Add(id);
+                }
+
+
+            return retVal;
+        }
+        // -----------
+
         public static string GetBlockId(int x, int y) => string.Format(_blockIdPrefix, x, y);
 
         public int RowsBlockMinVal { get => _rowsBlockMinVal; }
@@ -183,6 +218,7 @@ namespace BlazorWasmGames2.Code
             ResetHints();
             CheckHori();
             CheckVert();
+            CheckBlock();
         }
 
         private void CheckHori()
@@ -197,13 +233,23 @@ namespace BlazorWasmGames2.Code
 
         private void CheckVert()
         {
-            Dictionary<string, SudokuCellInfo> _positionsVert = GetSuVertFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x, _positions[x]
-            ))
-                .ToDictionary(t => t.Key, t => t.Value);
+            Dictionary<string, SudokuCellInfo> _positions1 = GetSuVertFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x, _positions[x])).ToDictionary(t => t.Key, t => t.Value);
 
-            for (int i = 0; i < Math.Sqrt(_positionsVert.Count); i++)
+            for (int i = 0; i < Math.Sqrt(_positions1.Count); i++)
             {
-                List<string> su = _positionsVert.Skip(i * (int)Math.Sqrt(_positionsVert.Count)).Take((int)Math.Sqrt(_positionsVert.Count)).Select(x => x.Key).ToList();
+                List<string> su = _positions1.Skip(i * (int)Math.Sqrt(_positions1.Count)).Take((int)Math.Sqrt(_positions1.Count)).Select(x => x.Key).ToList();
+
+                CheckInternal(su);
+            }
+        }
+
+        private void CheckBlock()
+        {
+            Dictionary<string, SudokuCellInfo> _positions1 = GetSuBlockFull().Flatten().Select(x => new KeyValuePair<string, SudokuCellInfo>(x, _positions[x])).ToDictionary(t => t.Key, t => t.Value);
+
+            for (int i = 0; i < Math.Sqrt(_positions1.Count); i++)
+            {
+                List<string> su = _positions1.Skip(i * (int)Math.Sqrt(_positions1.Count)).Take((int)Math.Sqrt(_positions1.Count)).Select(x => x.Key).ToList();
 
                 CheckInternal(su);
             }
