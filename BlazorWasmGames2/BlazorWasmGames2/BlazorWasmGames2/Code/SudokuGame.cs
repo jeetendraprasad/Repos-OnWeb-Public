@@ -261,27 +261,28 @@ namespace BlazorWasmGames2.Code
         {
             Console.WriteLine($"Solving for unit \r\n {JsonSerializer.Serialize(su ?? [])}");
 
-            for (int j = 0; j < su.Count; j++)
-            {
-                string our = su[j];
-                List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
-
-                if (_positions[our].CellValue == 0)
-                    foreach (string other in others)
-                    {
-                        if (_positions[other].CellValue > 0)
-                        {
-                            Console.WriteLine($"From position {our} removing hint {_positions[other].CellValue}");
-                            _positions[our].DisableHint(_positions[other].CellValue);
-                        }
-                    }
-                else
+            if(su is not null)
+                for (int j = 0; j < su.Count; j++)
                 {
-                    Console.WriteLine($"For position {our} removing all hints");
-                    _positions[our].ResetHints();
-                }
+                    string our = su[j];
+                    List<string> others = su.Where(x => x != su[j]).ToList(); // to do add value check
 
-            }
+                    if (_positions[our].CellValue == 0)
+                        foreach (string other in others)
+                        {
+                            if (_positions[other].CellValue > 0)
+                            {
+                                Console.WriteLine($"From position {our} removing hint {_positions[other].CellValue}");
+                                _positions[our].DisableHint(_positions[other].CellValue);
+                            }
+                        }
+                    else
+                    {
+                        Console.WriteLine($"For position {our} removing all hints");
+                        _positions[our].ResetHints();
+                    }
+
+                }
         }
     }
 
@@ -320,7 +321,7 @@ namespace BlazorWasmGames2.Code
 
         public object Clone()
         {
-            Integer1 cloned = new Integer1(this._value, this._minValue, this._maxValue);
+            Integer1 cloned = new(this._value, this._minValue, this._maxValue);
             return cloned;
         }
 
@@ -331,26 +332,15 @@ namespace BlazorWasmGames2.Code
         }
     }
 
-    internal class HintInfo : ICloneable
+    internal class HintInfo(string hintId, int hintNo, bool hintEnabled) : ICloneable
     {
-        //readonly string _hintId = "";
-        //readonly int _hintNo = 0;
-        //readonly bool _hintEnabled = false;
-
-        public HintInfo(string hintId, int hintNo, bool hintEnabled)
-        {
-            HintId = hintId;
-            HintNo = hintNo;
-            HintEnabled = hintEnabled;
-        }
-
-        public string HintId { get; private set; }
-        public int HintNo { get; private set; }
-        public bool HintEnabled { get; private set; }
+        public string HintId { get; private set; } = hintId;
+        public int HintNo { get; private set; } = hintNo;
+        public bool HintEnabled { get; private set; } = hintEnabled;
 
         public object Clone()
         {
-            HintInfo cloned = new HintInfo(this.HintId, this.HintNo, this.HintEnabled);
+            HintInfo cloned = new(this.HintId, this.HintNo, this.HintEnabled);
 
             return cloned;
         }
@@ -360,9 +350,9 @@ namespace BlazorWasmGames2.Code
 
     internal class SudokuCellInfo : ICloneable
     {
-        string _cellId = "";
+        readonly string _cellId = "";
         //SudokuPositionTypeEnum _positionType;
-        Integer1 _cellValueField1;
+        readonly Integer1 _cellValueField1;
         List<HintInfo> _hints = [];
 
         public SudokuCellInfo(string cellId,
@@ -408,9 +398,10 @@ namespace BlazorWasmGames2.Code
 
         public object Clone()
         {
-            SudokuCellInfo cloned = new SudokuCellInfo(this._cellId, this._cellValueField1.GetMaxValue(), this.CellValue) {};
-
-            cloned._hints = this.Hints.Select( x => (HintInfo)x.Clone() ).ToList();
+            SudokuCellInfo cloned = new(this._cellId, this._cellValueField1.GetMaxValue(), this.CellValue)
+            {
+                _hints = this.Hints.Select(x => (HintInfo)x.Clone()).ToList()
+            };
 
             return cloned;
         }
