@@ -1,0 +1,123 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Quiz Application</h1>
+
+@if (currentQuestionIndex < quizData.Count)
+{
+    <div class="quiz-container">
+        <h2>Question @(currentQuestionIndex + 1)</h2>
+        <p>@quizData[currentQuestionIndex].Question</p>
+        <div class="options">
+            @for (int i = 0; i < quizData[currentQuestionIndex].Options.Count; i++)
+            {
+                var index = i;
+                <button class="@GetOptionClass(index)" @onclick="() => SelectOption(index)" disabled="@isAnswered">
+                    @quizData[currentQuestionIndex].Options[i]
+                </button>
+            }
+        </div>
+        @if (isAnswered)
+        {
+            <div class="feedback">
+                @if (selectedOption == quizData[currentQuestionIndex].CorrectAnswer)
+                {
+                    <p class="correct">Correct!</p>
+                }
+                else
+                {
+                    <p class="wrong">Wrong! The correct answer was: @quizData[currentQuestionIndex].Options[quizData[currentQuestionIndex].CorrectAnswer]</p>
+                }
+            </div>
+            @if (currentQuestionIndex < quizData.Count - 1)
+            {
+                <button class="next-button" @onclick="NextQuestion">Next Question</button>
+            }
+            else
+            {
+                <button class="next-button" @onclick="ShowResults">Show Results</button>
+            }
+
+        }
+
+    </div>
+}
+else
+{
+    <div class="results">
+        <h2>Quiz Complete!</h2>
+        <p>Correct Answers: @correctAnswers</p>
+        <p>Wrong Answers: @(quizData.Count - correctAnswers)</p>
+        <p>Total Score: @correctAnswers out of @quizData.Count</p>
+    </div>
+}
+
+@code {
+    private List<QuizQuestion> quizData = new List<QuizQuestion>
+    {
+        new QuizQuestion
+        {
+            Question = "What is the capital of France?",
+            Options = new List<string> { "London", "Berlin", "Paris", "Madrid" },
+            CorrectAnswer = 2
+        },
+        new QuizQuestion
+        {
+            Question = "Which planet is known as the Red Planet?",
+            Options = new List<string> { "Mars", "Jupiter", "Venus", "Saturn" },
+            CorrectAnswer = 0
+        },
+        new QuizQuestion
+        {
+            Question = "What is the largest mammal in the world?",
+            Options = new List<string> { "Elephant", "Blue Whale", "Giraffe", "Hippopotamus" },
+            CorrectAnswer = 1
+        }
+    };
+    private int currentQuestionIndex = 0;
+    private int selectedOption = -1;
+    private bool isAnswered = false;
+    private int correctAnswers = 0;
+
+    private void SelectOption(int index)
+    {
+        if (!isAnswered)
+        {
+            selectedOption = index;
+            isAnswered = true;
+
+            if (index == quizData[currentQuestionIndex].CorrectAnswer)
+            {
+                correctAnswers++;
+            }
+        }
+    }
+
+    private void NextQuestion()
+    {
+        currentQuestionIndex++;
+        selectedOption = -1;
+        isAnswered = false;
+    }
+
+    private void ShowResults()
+    {
+        currentQuestionIndex = quizData.Count;
+    }
+
+    private string GetOptionClass(int index)
+    {
+        if (!isAnswered)
+            return "option";
+
+        if(index == quizData[currentQuestionIndex].CorrectAnswer)
+            return "option correct";
+
+        if (index == selectedOption)
+            return "option wrong";
+
+        return "option";
+    }
+
+}
